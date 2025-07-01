@@ -14,3 +14,14 @@ A multi-user Vehicle Parking Management System built with **Flask** (REST API), 
 ## 🚀 Features
 
 ### Admin
+- Auto-created superuser (no registration)
+- **Parking Lot Management** — Create / Edit / Delete lots (only if all spots are empty)
+- **Spot Grid View** — Visual map of all spots; click occupied to see customer details
+- **All Reservations** — View all bookings across all lots
+- **Search** — Search by lot name, PIN code, user email
+- **Analytics & Charts** — Revenue per lot, daily bookings, occupancy (Chart.js)
+- **Monthly Reports** — Auto-generated HTML + PDF reports, emailed to admin
+- **User Management** — View all registered users
+
+### User
+- **Register / Login** — Email-based JWT authentication
