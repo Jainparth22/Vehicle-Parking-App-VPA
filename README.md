@@ -25,3 +25,21 @@ A multi-user Vehicle Parking Management System built with **Flask** (REST API), 
 
 ### User
 - **Register / Login** — Email-based JWT authentication
+- **Browse & Search** — Find parking lots by location or PIN code
+- **Book a Spot** — System auto-assigns first available spot; enter vehicle number
+- **Release a Spot** — Calculates final cost (duration × price per hour)
+- **History** — View all past and active reservations
+- **Summary Charts** — Monthly spending, lot breakdown (Chart.js)
+- **Export CSV** — Trigger async export of full parking history
+
+### Background Jobs (Celery + Redis)
+| Job | Schedule | Description |
+|---|---|---|
+| `send_daily_reminders` | Every 24 hours | Email + Google Chat reminder to inactive users |
+| `generate_monthly_report` | Every 30 days | HTML/PDF report emailed to admin |
+| `export_parking_csv` | User-triggered | Async CSV export, notifies when ready |
+
+---
+
+## 🏗️ Tech Stack
+
