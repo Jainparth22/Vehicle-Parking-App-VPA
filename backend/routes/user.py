@@ -15,3 +15,13 @@ user_bp = Blueprint('user', __name__, url_prefix='/api/user')
 
 @user_bp.route('/dashboard', methods=['GET'])
 @role_required('user')
+def dashboard(user):
+    reservations = Reservation.query.filter_by(user_id=user.id).order_by(
+        Reservation.parking_timestamp.desc()
+    ).all()
+
+    active_res = [r for r in reservations if not r.leaving_timestamp]
+    completed_res = [r for r in reservations if r.leaving_timestamp]
+    total_spent = sum(r.parking_cost for r in completed_res)
+
+    # Current live cost for active reservations
