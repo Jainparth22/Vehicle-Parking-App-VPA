@@ -1,0 +1,14 @@
+/* =========================================================
+   Vehicle Parking App — Global Stylesheet
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ── Design Tokens ────────────────────────────────────────── */
+:root {
+  --primary:        #1a1a2e;
+  --primary-mid:    #16213e;
+  --accent:         #0f3460;
+  --highlight:      #e94560;
+  --highlight-soft: #ff6b8a;
+  --success:        #06d6a0;
