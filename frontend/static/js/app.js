@@ -15,3 +15,18 @@ api.interceptors.response.use(
   res => res,
   err => {
     if (err.response?.status === 401) {
+      localStorage.removeItem('vpa_token');
+      // Reload triggers auth page
+      window.location.reload();
+    }
+    return Promise.reject(err);
+  }
+);
+
+// ── Root App ───────────────────────────────────────────────
+const VPA = {
+  components: {
+    AuthPage,
+    AdminDashboard,
+    AdminLotDetail,
+    AdminCreateLot,
