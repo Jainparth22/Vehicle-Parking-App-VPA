@@ -12,3 +12,9 @@
   --highlight:      #e94560;
   --highlight-soft: #ff6b8a;
   --success:        #06d6a0;
+  --warning:        #ffd166;
+  --info:           #118ab2;
+  --text:           #eaeaea;
+  --text-muted:     #9a9ab0;
+  --glass-bg:       rgba(255, 255, 255, 0.06);
+  --glass-border:   rgba(255, 255, 255, 0.12);
