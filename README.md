@@ -43,3 +43,11 @@ A multi-user Vehicle Parking Management System built with **Flask** (REST API), 
 
 ## 🏗️ Tech Stack
 
+| Layer | Technology |
+|---|---|
+| Backend | Flask 3.0, Flask-SQLAlchemy, Flask-CORS, Flask-Mail |
+| Database | SQLite (via SQLAlchemy) |
+| Auth | Custom JWT (PyJWT) — token-based, role-based access control |
+| Frontend | Vue 3 (CDN), Axios, Bootstrap 5, Chart.js, Bootstrap Icons |
+| Caching | Redis |
+| Background Jobs | Celery + Redis |
