@@ -14,3 +14,22 @@ class User(db.Model):
     address = db.Column(db.String(200))
     pin_code = db.Column(db.String(10))
     is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
+
+    reservations = db.relationship('Reservation', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    notifications = db.relationship('Notification', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    async_jobs = db.relationship('AsyncJob', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'role': self.role,
+            'full_name': self.full_name,
+            'address': self.address,
+            'pin_code': self.pin_code,
+            'is_active': self.is_active,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'last_login': self.last_login.isoformat() if self.last_login else None,
+        }
