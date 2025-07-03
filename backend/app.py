@@ -16,3 +16,16 @@ mail = Mail()
 
 def create_app():
     app = Flask(
+        __name__,
+        static_folder=os.path.join(os.path.dirname(__file__), '..', 'frontend', 'static'),
+        template_folder=os.path.join(os.path.dirname(__file__), '..', 'frontend', 'templates')
+    )
+    app.config.from_object(Config)
+
+    # Init extensions
+    db.init_app(app)
+    mail.init_app(app)
+    CORS(app, resources={r'/api/*': {'origins': '*'}})
+
+    # Register blueprints
+    from routes.admin import admin_bp
