@@ -12,3 +12,10 @@ PyJWT==2.8.0
 SQLAlchemy==2.0.38
 
 # ── Async / Background Jobs ───────────────────────────────
+celery==5.3.6
+redis==5.0.1
+
+# ── Config ────────────────────────────────────────────────
+python-dotenv==1.0.0
+
+# ── PDF Report Generation (optional) ─────────────────────
