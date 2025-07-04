@@ -38,3 +38,20 @@ def get_current_user():
     if not payload:
         return None
     user = User.query.get(payload['user_id'])
+    if user and user.is_active:
+        return user
+    return None
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        user = get_current_user()
+        if not user:
+            return jsonify({'error': 'Authentication required'}), 401
+        return f(user, *args, **kwargs)
+    return decorated
+
+
+def role_required(*roles):
+    def decorator(f):

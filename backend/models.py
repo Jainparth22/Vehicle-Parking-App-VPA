@@ -59,3 +59,20 @@ class ParkingLot(db.Model):
             'available_spots': self.spots.filter_by(status='A').count(),
             'occupied_spots': self.spots.filter_by(status='O').count(),
         }
+        if include_spots:
+            data['spots'] = [s.to_dict() for s in self.spots.order_by(ParkingSpot.spot_number).all()]
+        return data
+
+
+class ParkingSpot(db.Model):
+    __tablename__ = 'parking_spots'
+    id = db.Column(db.Integer, primary_key=True)
+    lot_id = db.Column(db.Integer, db.ForeignKey('parking_lots.id'), nullable=False)
+    spot_number = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.String(1), nullable=False, default='A')  # A=available, O=occupied
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    reservations = db.relationship('Reservation', backref='spot', lazy='dynamic')
+
+    def to_dict(self):
+        # Get current active reservation if occupied
