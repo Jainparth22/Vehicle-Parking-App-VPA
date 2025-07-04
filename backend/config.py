@@ -25,3 +25,21 @@ class Config:
     CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/1')
     CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://localhost:6379/1')
 
+    # ── Mail ──────────────────────────────────────────────────────
+    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+    MAIL_PORT = int(os.environ.get('MAIL_PORT', 587))
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME', '')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', '')
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', '')
+
+    # ── Google Chat Webhook (optional) ────────────────────────────
+    GCHAT_WEBHOOK_URL = os.environ.get('GCHAT_WEBHOOK_URL', '')
+
+    # ── Uploads ───────────────────────────────────────────────────
+    UPLOAD_FOLDER = os.path.join(BASE_DIR, 'exports')
+    MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5 MB
+
+    # ── Admin (auto-created on first run) ─────────────────────────
+    ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'admin@parkingapp.com')
+    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'admin123')
