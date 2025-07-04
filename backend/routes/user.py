@@ -25,3 +25,23 @@ def dashboard(user):
     total_spent = sum(r.parking_cost for r in completed_res)
 
     # Current live cost for active reservations
+    now = datetime.utcnow()
+    active_data = []
+    for r in active_res:
+        d = r.to_dict()
+        active_data.append(d)
+
+    # Available lots
+    all_lots = ParkingLot.query.all()
+    available_lots = [
+        l.to_dict() for l in all_lots if l.spots.filter_by(status='A').count() > 0
+    ]
+
+    unread_notifications = Notification.query.filter_by(
+        user_id=user.id, is_read=False
+    ).count()
+
+    return jsonify({
+        'user': user.to_dict(),
+        'active_reservations': [r.to_dict() for r in active_res],
+        'recent_completed': [r.to_dict() for r in completed_res[:10]],
