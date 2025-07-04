@@ -36,3 +36,19 @@ const VPA = {
     AdminAnalytics,
     UserDashboard,
     UserBrowseLots,
+    UserReserve,
+    UserRelease,
+    UserHistory,
+    UserAnalytics,
+  },
+
+  setup() {
+    const currentPage = ref('auth');
+    const navPayload  = ref(null);       // extra data passed to a page
+    const currentUser = ref(null);
+    const toasts      = ref([]);
+    const notifCount  = ref(0);
+
+    // ── Navigation ───────────────────────────────────────
+    function navigate(page, data = null) {
+      currentPage.value = page;

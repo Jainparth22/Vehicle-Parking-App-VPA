@@ -23,3 +23,18 @@ def decode_token(token):
     try:
         payload = jwt.decode(token, current_app.config['JWT_SECRET_KEY'], algorithms=['HS256'])
         return payload
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
+
+
+def get_current_user():
+    auth_header = request.headers.get('Authorization', '')
+    if not auth_header.startswith('Bearer '):
+        return None
+    token = auth_header.split(' ')[1]
+    payload = decode_token(token)
+    if not payload:
+        return None
+    user = User.query.get(payload['user_id'])
