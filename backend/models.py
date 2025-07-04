@@ -45,3 +45,17 @@ class ParkingLot(db.Model):
     number_of_spots = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    spots = db.relationship('ParkingSpot', backref='lot', lazy='dynamic', cascade='all, delete-orphan')
+
+    def to_dict(self, include_spots=False):
+        data = {
+            'id': self.id,
+            'prime_location_name': self.prime_location_name,
+            'address': self.address,
+            'pin_code': self.pin_code,
+            'price_per_hour': self.price_per_hour,
+            'number_of_spots': self.number_of_spots,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'available_spots': self.spots.filter_by(status='A').count(),
+            'occupied_spots': self.spots.filter_by(status='O').count(),
+        }

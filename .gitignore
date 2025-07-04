@@ -16,3 +16,9 @@ venv/
 env/
 .venv/
 
+# ── Celery ────────────────────────────────────────────────
+celerybeat-schedule
+celerybeat.pid
+
+# ── Exports / Reports ────────────────────────────────────
+backend/exports/
