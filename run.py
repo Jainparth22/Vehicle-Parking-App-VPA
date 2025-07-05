@@ -27,3 +27,4 @@ if __name__ == '__main__':
     else:
         print('[*] Starting development server on http://localhost:5002')
         print('[*] Admin login: see ADMIN_EMAIL and ADMIN_PASSWORD in .env')
+        app.run(debug=True, port=5002, host='0.0.0.0')

@@ -51,3 +51,17 @@ A multi-user Vehicle Parking Management System built with **Flask** (REST API), 
 | Frontend | Vue 3 (CDN), Axios, Bootstrap 5, Chart.js, Bootstrap Icons |
 | Caching | Redis |
 | Background Jobs | Celery + Redis |
+| Email | Flask-Mail (SMTP/Gmail) |
+| Alerts | Google Chat Webhooks |
+
+> **Note on Flask-Security:** Custom JWT was chosen over Flask-Security for full control over token payload, role-based decorators, and the ability to run without session state. This provides a clean REST API that works seamlessly with the Vue 3 SPA.
+
+---
+
+## 📁 Folder Structure
+
+```
+P2 vehicle-parking-app/
+├── run.py                          ← Entry point
+├── requirements.txt                ← Python dependencies (clean, 12 packages)
+├── .env.example                    ← Environment variables template
