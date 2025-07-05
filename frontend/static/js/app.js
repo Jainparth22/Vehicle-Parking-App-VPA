@@ -63,3 +63,20 @@ const VPA = {
       try { await api.post('/auth/logout'); } catch(_) {}
       localStorage.removeItem('vpa_token');
       currentUser.value = null;
+      navigate('auth');
+      showToast('Logged out successfully', 'info');
+    }
+
+    // ── Toast helpers ────────────────────────────────────
+    let _toastId = 0;
+    function showToast(message, type = 'info') {
+      const id = ++_toastId;
+      toasts.value.push({ id, message, type });
+      setTimeout(() => {
+        toasts.value = toasts.value.filter(t => t.id !== id);
+      }, 4000);
+    }
+
+    function dismissToast(id) {
+      toasts.value = toasts.value.filter(t => t.id !== id);
+    }

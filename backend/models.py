@@ -81,3 +81,12 @@ class ParkingSpot(db.Model):
             active_res = self.reservations.filter_by(leaving_timestamp=None).first()
         return {
             'id': self.id,
+            'lot_id': self.lot_id,
+            'spot_number': self.spot_number,
+            'status': self.status,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'active_reservation': active_res.to_dict() if active_res else None,
+        }
+
+
+class Reservation(db.Model):

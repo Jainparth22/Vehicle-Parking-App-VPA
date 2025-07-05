@@ -16,3 +16,12 @@ def get_redis():
                 socket_connect_timeout=2
             )
             _redis_client.ping()
+        except Exception as e:
+            print(f'[!] Redis connection failed: {e}')
+            _redis_client = None
+    else:
+        try:
+            _redis_client.ping()
+        except Exception:
+            _redis_client = None
+    return _redis_client
