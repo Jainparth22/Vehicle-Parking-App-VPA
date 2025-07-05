@@ -50,3 +50,15 @@ def dashboard(user):
         'total_spent': round(total_spent, 2),
         'available_lots': available_lots,
         'unread_notifications': unread_notifications,
+    }), 200
+
+
+# ── Browse Lots ───────────────────────────────────────────────────────────────
+
+@user_bp.route('/lots', methods=['GET'])
+@role_required('user')
+def browse_lots(user):
+    cache_key = 'user:lots:all'
+    cached = cache_get(cache_key)
+    if cached:
+        return jsonify(cached), 200

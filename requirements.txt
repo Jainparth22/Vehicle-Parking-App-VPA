@@ -19,3 +19,10 @@ redis==5.0.1
 python-dotenv==1.0.0
 
 # ── PDF Report Generation (optional) ─────────────────────
+xhtml2pdf==0.2.11
+
+# ── HTTP Requests (webhooks) ─────────────────────────────
+requests==2.31.0
+
+# ── Production Server ─────────────────────────────────────
+gunicorn==21.2.0
