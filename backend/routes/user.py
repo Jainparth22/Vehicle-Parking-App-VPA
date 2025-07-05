@@ -45,3 +45,8 @@ def dashboard(user):
         'user': user.to_dict(),
         'active_reservations': [r.to_dict() for r in active_res],
         'recent_completed': [r.to_dict() for r in completed_res[:10]],
+        'total_reservations': len(reservations),
+        'total_active': len(active_res),
+        'total_spent': round(total_spent, 2),
+        'available_lots': available_lots,
+        'unread_notifications': unread_notifications,

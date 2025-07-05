@@ -52,3 +52,14 @@ const VPA = {
     // ── Navigation ───────────────────────────────────────
     function navigate(page, data = null) {
       currentPage.value = page;
+      navPayload.value  = data;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Auth helpers ─────────────────────────────────────
+    function setUser(user) { currentUser.value = user; }
+
+    async function logout() {
+      try { await api.post('/auth/logout'); } catch(_) {}
+      localStorage.removeItem('vpa_token');
+      currentUser.value = null;
