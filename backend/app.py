@@ -29,3 +29,18 @@ def create_app():
 
     # Register blueprints
     from routes.admin import admin_bp
+    from routes.user import user_bp
+    app.register_blueprint(admin_bp)
+    app.register_blueprint(user_bp)
+
+    # Init Celery
+    try:
+        from celery_worker import init_celery
+        init_celery(app)
+    except Exception as e:
+        print(f'[!] Celery init failed: {e} — async tasks won\'t work')
+
+    # Create tables and seed admin
+    with app.app_context():
+        os.makedirs(os.path.join(app.config.get('UPLOAD_FOLDER', 'exports')), exist_ok=True)
+        os.makedirs('instance', exist_ok=True)

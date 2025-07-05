@@ -76,3 +76,8 @@ class ParkingSpot(db.Model):
 
     def to_dict(self):
         # Get current active reservation if occupied
+        active_res = None
+        if self.status == 'O':
+            active_res = self.reservations.filter_by(leaving_timestamp=None).first()
+        return {
+            'id': self.id,

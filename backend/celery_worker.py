@@ -34,3 +34,19 @@ def init_celery(app):
     celery.conf.update(
         broker_url=app.config.get('CELERY_BROKER_URL', 'redis://localhost:6379/1'),
         result_backend=app.config.get('CELERY_RESULT_BACKEND', 'redis://localhost:6379/1'),
+    )
+
+    class ContextTask(celery.Task):
+        abstract = True
+
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
+
+
+# When running as Celery worker (not via Flask), create the app context
+try:
+    from app import create_app
