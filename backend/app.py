@@ -44,3 +44,23 @@ def create_app():
     with app.app_context():
         os.makedirs(os.path.join(app.config.get('UPLOAD_FOLDER', 'exports')), exist_ok=True)
         os.makedirs('instance', exist_ok=True)
+        os.makedirs('exports', exist_ok=True)
+        os.makedirs('reports', exist_ok=True)
+
+        db.create_all()
+
+        # Auto-create admin if not exists
+        admin = User.query.filter_by(role='admin').first()
+        if not admin:
+            admin = User(
+                email=app.config['ADMIN_EMAIL'],
+                password_hash=generate_password_hash(app.config['ADMIN_PASSWORD']),
+                role='admin',
+                full_name='Admin',
+                is_active=True,
+            )
+            db.session.add(admin)
+            db.session.commit()
+            print(f"[+] Admin user created: {app.config['ADMIN_EMAIL']}")
+
+    # ── Auth Routes ───────────────────────────────────────────────
