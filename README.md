@@ -65,3 +65,8 @@ P2 vehicle-parking-app/
 ├── run.py                          ← Entry point
 ├── requirements.txt                ← Python dependencies (clean, 12 packages)
 ├── .env.example                    ← Environment variables template
+├── .gitignore
+├── README.md
+│
+├── backend/
+│   ├── app.py                      ← Flask app factory + auth routes

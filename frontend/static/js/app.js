@@ -80,3 +80,18 @@ const VPA = {
     function dismissToast(id) {
       toasts.value = toasts.value.filter(t => t.id !== id);
     }
+
+    // ── Notification count ───────────────────────────────
+    async function fetchNotifCount() {
+      if (!currentUser.value) return;
+      try {
+        const res = await api.get('/notifications');
+        notifCount.value = res.data.filter(n => !n.is_read).length;
+      } catch(_) {}
+    }
+
+    // ── Check stored token on load ───────────────────────
+    onMounted(async () => {
+      const token = localStorage.getItem('vpa_token');
+      if (token) {
+        try {

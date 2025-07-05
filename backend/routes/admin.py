@@ -29,3 +29,18 @@ def dashboard(user):
     if cached:
         return jsonify(cached), 200
 
+    all_lots = ParkingLot.query.all()
+    all_reservations = Reservation.query.all()
+    all_users = User.query.filter_by(role='user').all()
+
+    total_spots = sum(lot.number_of_spots for lot in all_lots)
+    occupied_spots = sum(lot.spots.filter_by(status='O').count() for lot in all_lots)
+    available_spots = total_spots - occupied_spots
+
+    completed_res = [r for r in all_reservations if r.leaving_timestamp]
+    total_revenue = sum(r.parking_cost for r in completed_res)
+    active_res = [r for r in all_reservations if not r.leaving_timestamp]
+
+    # Revenue per lot
+    lot_revenue = {}
+    for res in completed_res:
