@@ -44,3 +44,14 @@ def dashboard(user):
     # Revenue per lot
     lot_revenue = {}
     for res in completed_res:
+        lot_name = res.get_lot_name()
+        lot_revenue[lot_name] = lot_revenue.get(lot_name, 0) + res.parking_cost
+    top_lots = sorted(lot_revenue.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    # Recent activity (last 10)
+    recent = sorted(
+        [r for r in all_reservations if r.spot and r.spot.lot],
+        key=lambda x: x.parking_timestamp or datetime.min, reverse=True
+    )[:10]
+
+    data = {

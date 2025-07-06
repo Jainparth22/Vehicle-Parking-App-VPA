@@ -62,3 +62,18 @@ def browse_lots(user):
     cached = cache_get(cache_key)
     if cached:
         return jsonify(cached), 200
+
+    lots = ParkingLot.query.all()
+    data = [l.to_dict() for l in lots]
+    cache_set(cache_key, data, ttl=60)
+    return jsonify(data), 200
+
+
+@user_bp.route('/lots/search', methods=['GET'])
+@role_required('user')
+def search_lots(user):
+    q = request.args.get('q', '').strip()
+    if not q:
+        return jsonify({'error': 'Search query is required'}), 400
+
+    # Search by location name or pincode
