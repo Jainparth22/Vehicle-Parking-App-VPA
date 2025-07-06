@@ -34,3 +34,8 @@ def send_gchat_webhook(message):
 
 @celery.task(name='tasks.send_daily_reminders')
 def send_daily_reminders():
+    """
+    Daily reminder task:
+    - Checks users who haven't made a reservation recently
+    - Checks if admin created new lots
+    - Sends reminder via email + Google Chat webhook
