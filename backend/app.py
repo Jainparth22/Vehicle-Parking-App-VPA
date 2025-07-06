@@ -64,3 +64,23 @@ def create_app():
             print(f"[+] Admin user created: {app.config['ADMIN_EMAIL']}")
 
     # ── Auth Routes ───────────────────────────────────────────────
+
+    @app.route('/api/auth/login', methods=['POST'])
+    def login():
+        data = request.json
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+
+        email = data.get('email', '').strip()
+        password = data.get('password', '').strip()
+
+        if not email or not password:
+            return jsonify({'error': 'Email and password are required'}), 400
+
+        if not validate_email(email):
+            return jsonify({'error': 'Invalid email format'}), 400
+
+        user = User.query.filter_by(email=email).first()
+        if not user or not check_password_hash(user.password_hash, password):
+            return jsonify({'error': 'Invalid email or password'}), 401
+

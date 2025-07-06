@@ -70,3 +70,11 @@ P2 vehicle-parking-app/
 │
 ├── backend/
 │   ├── app.py                      ← Flask app factory + auth routes
+│   ├── auth.py                     ← JWT helpers and decorators
+│   ├── cache.py                    ← Redis cache singleton
+│   ├── celery_worker.py            ← Celery app + beat schedule
+│   ├── config.py                   ← Configuration (loads from .env)
+│   ├── models.py                   ← SQLAlchemy models
+│   ├── tasks.py                    ← Celery background tasks (3 tasks)
+│   ├── validators.py               ← Input validation helpers
+│   └── routes/

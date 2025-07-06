@@ -95,3 +95,8 @@ const VPA = {
       const token = localStorage.getItem('vpa_token');
       if (token) {
         try {
+          const res = await api.get('/auth/me');
+          currentUser.value = res.data.user;
+          navigate(res.data.user.role === 'admin' ? 'admin-dashboard' : 'user-dashboard');
+          fetchNotifCount();
+          // Poll notifications every 30s
