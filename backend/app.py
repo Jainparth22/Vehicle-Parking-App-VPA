@@ -84,3 +84,20 @@ def create_app():
         if not user or not check_password_hash(user.password_hash, password):
             return jsonify({'error': 'Invalid email or password'}), 401
 
+        if not user.is_active:
+            return jsonify({'error': 'Account is deactivated. Contact admin.'}), 403
+
+        user.last_login = datetime.utcnow()
+        db.session.commit()
+
+        token = generate_token(user)
+        return jsonify({
+            'message': 'Login successful',
+            'token': token,
+            'user': user.to_dict(),
+        }), 200
+
+    @app.route('/api/auth/register', methods=['POST'])
+    def register():
+        data = request.json
+        if not data:
