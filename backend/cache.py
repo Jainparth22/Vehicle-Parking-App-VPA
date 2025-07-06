@@ -25,3 +25,14 @@ def get_redis():
         except Exception:
             _redis_client = None
     return _redis_client
+
+
+def cache_get(key):
+    r = get_redis()
+    if r is None:
+        return None
+    try:
+        data = r.get(key)
+        if data:
+            return json.loads(data)
+    except Exception:

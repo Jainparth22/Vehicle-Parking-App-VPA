@@ -78,3 +78,22 @@ P2 vehicle-parking-app/
 │   ├── tasks.py                    ← Celery background tasks (3 tasks)
 │   ├── validators.py               ← Input validation helpers
 │   └── routes/
+│       ├── __init__.py
+│       ├── admin.py                ← Admin REST API routes
+│       └── user.py                 ← User REST API routes
+│
+└── frontend/
+    ├── static/
+    │   ├── css/style.css           ← Custom dark glassmorphism theme
+    │   └── js/
+    │       ├── app.js              ← Vue 3 root app (navigation, toasts, auth)
+    │       └── pages.js            ← Vue page components (all pages)
+    └── templates/
+        └── index.html              ← SPA entry point (CDN imports)
+```
+
+---
+
+## 🗄️ Database Schema (ER Summary)
+
+| Table | Key Fields |
