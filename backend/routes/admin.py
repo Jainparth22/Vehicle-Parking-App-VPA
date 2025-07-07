@@ -75,3 +75,17 @@ def dashboard(user):
 # ── Users ─────────────────────────────────────────────────────────────────────
 
 @admin_bp.route('/users', methods=['GET'])
+@role_required('admin')
+def list_users(user):
+    users = User.query.filter_by(role='user').order_by(User.created_at.desc()).all()
+    return jsonify([u.to_dict() for u in users]), 200
+
+
+# ── Parking Lots ──────────────────────────────────────────────────────────────
+
+@admin_bp.route('/lots', methods=['GET'])
+@role_required('admin')
+def list_lots(user):
+    lots = ParkingLot.query.order_by(ParkingLot.created_at.desc()).all()
+    return jsonify([_lot_summary(l) for l in lots]), 200
+

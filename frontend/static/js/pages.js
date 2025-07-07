@@ -37,3 +37,16 @@ const AuthPage = {
       }
       loading.value = true;
       try {
+        const res = await api.post('/auth/register', regForm.value);
+        localStorage.setItem('vpa_token', res.data.token);
+        setUser(res.data.user);
+        showToast('Registration successful! Welcome! 🎉', 'success');
+        navigate('user-dashboard');
+      } catch(e) {
+        showToast(e.response?.data?.error || 'Registration failed', 'error');
+      } finally { loading.value = false; }
+    }
+
+    return { tab, loading, loginForm, regForm, handleLogin, handleRegister };
+  },
+  template: `
