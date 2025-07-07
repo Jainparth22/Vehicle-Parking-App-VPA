@@ -101,3 +101,17 @@ def create_app():
     def register():
         data = request.json
         if not data:
+            return jsonify({'error': 'No data provided'}), 400
+
+        email = data.get('email', '').strip()
+        password = data.get('password', '').strip()
+        full_name = data.get('full_name', '').strip()
+
+        if not all([email, password, full_name]):
+            return jsonify({'error': 'Email, password, and full name are required'}), 400
+
+        if not validate_email(email):
+            return jsonify({'error': 'Invalid email format'}), 400
+
+        ok, err = validate_password(password)
+        if not ok:

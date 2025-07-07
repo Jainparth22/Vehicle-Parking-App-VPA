@@ -36,3 +36,15 @@ def cache_get(key):
         if data:
             return json.loads(data)
     except Exception:
+        pass
+    return None
+
+
+def cache_set(key, value, ttl=300):
+    r = get_redis()
+    if r is None:
+        return False
+    try:
+        r.setex(key, ttl, json.dumps(value))
+        return True
+    except Exception:

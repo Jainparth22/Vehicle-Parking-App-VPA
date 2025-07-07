@@ -39,3 +39,9 @@ def send_daily_reminders():
     - Checks users who haven't made a reservation recently
     - Checks if admin created new lots
     - Sends reminder via email + Google Chat webhook
+    """
+    try:
+        now = datetime.datetime.utcnow()
+        three_days_ago = now - datetime.timedelta(days=3)
+
+        # Get all active regular users
