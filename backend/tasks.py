@@ -52,3 +52,21 @@ def send_daily_reminders():
             ParkingLot.created_at >= now - datetime.timedelta(hours=24)
         ).all()
 
+        count = 0
+        for user in users:
+            # Check if user has parked recently
+            recent_reservation = Reservation.query.filter(
+                Reservation.user_id == user.id,
+                Reservation.parking_timestamp >= three_days_ago
+            ).first()
+
+            if not recent_reservation:
+                # Build message
+                new_lot_info = ''
+                if new_lots:
+                    lot_list = ', '.join([f'"{l.prime_location_name}" ({l.pin_code})' for l in new_lots[:3]])
+                    new_lot_info = f' New parking lots are available: {lot_list}.'
+
+                message_text = (
+                    f"Hi {user.full_name or user.email}! You haven't parked in the last 3 days. "
+                    f"Visit the Parking App to find and book a spot near you!{new_lot_info}"

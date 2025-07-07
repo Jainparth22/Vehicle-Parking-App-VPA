@@ -106,3 +106,21 @@ class Reservation(db.Model):
     price_per_hour_at_booking = db.Column(db.Float)
     spot_number_at_booking = db.Column(db.Integer)
 
+    def calculate_cost(self):
+        """Calculate parking cost based on duration and price at time of booking"""
+        if self.leaving_timestamp and self.parking_timestamp:
+            duration_hours = (self.leaving_timestamp - self.parking_timestamp).total_seconds() / 3600
+            price = self.price_per_hour_at_booking or 0.0
+            self.parking_cost = round(price * duration_hours, 2)
+            db.session.commit()
+
+    def get_lot_name(self):
+        if self.lot_name_at_booking:
+            return self.lot_name_at_booking
+        if self.spot and self.spot.lot:
+            return self.spot.lot.prime_location_name
+        return '(Deleted Lot)'
+
+    def get_lot_address(self):
+        if self.lot_address_at_booking:
+            return self.lot_address_at_booking
