@@ -55,3 +55,23 @@ def dashboard(user):
     )[:10]
 
     data = {
+        'total_lots': len(all_lots),
+        'total_spots': total_spots,
+        'occupied_spots': occupied_spots,
+        'available_spots': available_spots,
+        'occupancy_rate': round(occupied_spots / total_spots * 100, 1) if total_spots else 0,
+        'total_revenue': round(total_revenue, 2),
+        'active_reservations': len(active_res),
+        'completed_reservations': len(completed_res),
+        'total_users': len(all_users),
+        'top_lots': [{'name': n, 'revenue': round(r, 2)} for n, r in top_lots],
+        'recent_reservations': [r.to_dict() for r in recent],
+        'lots': [_lot_summary(l) for l in all_lots],
+    }
+    cache_set('admin:dashboard', data, ttl=120)
+    return jsonify(data), 200
+
+
+# ── Users ─────────────────────────────────────────────────────────────────────
+
+@admin_bp.route('/users', methods=['GET'])

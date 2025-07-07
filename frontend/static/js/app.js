@@ -100,3 +100,19 @@ const VPA = {
           navigate(res.data.user.role === 'admin' ? 'admin-dashboard' : 'user-dashboard');
           fetchNotifCount();
           // Poll notifications every 30s
+          setInterval(fetchNotifCount, 30000);
+        } catch(_) {
+          localStorage.removeItem('vpa_token');
+          navigate('auth');
+        }
+      }
+    });
+
+    // ── Computed: which page component ───────────────────
+    const pageMap = {
+      'auth':              'AuthPage',
+      'admin-dashboard':   'AdminDashboard',
+      'admin-lot-detail':  'AdminLotDetail',
+      'admin-create-lot':  'AdminCreateLot',
+      'admin-edit-lot':    'AdminEditLot',
+      'admin-users':       'AdminUsers',
