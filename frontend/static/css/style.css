@@ -18,3 +18,10 @@
   --text-muted:     #9a9ab0;
   --glass-bg:       rgba(255, 255, 255, 0.06);
   --glass-border:   rgba(255, 255, 255, 0.12);
+  --shadow:         0 8px 32px rgba(0, 0, 0, 0.4);
+  --radius:         12px;
+  --transition:     0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
