@@ -70,3 +70,23 @@ def send_daily_reminders():
                 message_text = (
                     f"Hi {user.full_name or user.email}! You haven't parked in the last 3 days. "
                     f"Visit the Parking App to find and book a spot near you!{new_lot_info}"
+                )
+
+                # In-app notification
+                notification = Notification(
+                    user_id=user.id,
+                    message=message_text,
+                    channel='in-app',
+                    is_sent=True,
+                )
+                db.session.add(notification)
+
+                # Email
+                if user.email:
+                    new_lot_html = ''
+                    if new_lots:
+                        lot_items = ''.join([
+                            f'<li><strong>{l.prime_location_name}</strong> — {l.address} (PIN: {l.pin_code}) — ₹{l.price_per_hour}/hr</li>'
+                            for l in new_lots[:5]
+                        ])
+                        new_lot_html = f'<h3>🆕 New Parking Lots Available</h3><ul>{lot_items}</ul>'

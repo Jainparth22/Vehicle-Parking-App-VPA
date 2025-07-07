@@ -58,3 +58,18 @@ def cache_delete(key):
     try:
         r.delete(key)
         return True
+    except Exception:
+        return False
+
+
+def cache_delete_pattern(pattern):
+    r = get_redis()
+    if r is None:
+        return False
+    try:
+        keys = r.keys(pattern)
+        if keys:
+            r.delete(*keys)
+        return True
+    except Exception:
+        return False

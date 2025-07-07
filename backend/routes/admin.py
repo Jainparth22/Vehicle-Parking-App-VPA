@@ -89,3 +89,14 @@ def list_lots(user):
     lots = ParkingLot.query.order_by(ParkingLot.created_at.desc()).all()
     return jsonify([_lot_summary(l) for l in lots]), 200
 
+
+@admin_bp.route('/lots', methods=['POST'])
+@role_required('admin')
+def create_lot(user):
+    data = request.json or {}
+    name = data.get('prime_location_name', '').strip()
+    address = data.get('address', '').strip()
+    pin_code = data.get('pin_code', '').strip()
+    price = data.get('price_per_hour', 0)
+    spots = data.get('number_of_spots', 0)
+
