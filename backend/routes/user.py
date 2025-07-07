@@ -77,3 +77,12 @@ def search_lots(user):
         return jsonify({'error': 'Search query is required'}), 400
 
     # Search by location name or pincode
+    lots = ParkingLot.query.filter(
+        db.or_(
+            ParkingLot.prime_location_name.ilike(f'%{q}%'),
+            ParkingLot.address.ilike(f'%{q}%'),
+            ParkingLot.pin_code.ilike(f'%{q}%'),
+        )
+    ).all()
+
+    # Attach availability

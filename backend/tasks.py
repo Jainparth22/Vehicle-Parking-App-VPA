@@ -45,3 +45,10 @@ def send_daily_reminders():
         three_days_ago = now - datetime.timedelta(days=3)
 
         # Get all active regular users
+        users = User.query.filter_by(role='user', is_active=True).all()
+
+        # Get lots created in the last 24 hours (new lots to promote)
+        new_lots = ParkingLot.query.filter(
+            ParkingLot.created_at >= now - datetime.timedelta(hours=24)
+        ).all()
+

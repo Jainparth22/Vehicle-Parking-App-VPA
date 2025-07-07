@@ -97,3 +97,10 @@ P2 vehicle-parking-app/
 ## 🗄️ Database Schema (ER Summary)
 
 | Table | Key Fields |
+|---|---|
+| `users` | id, email, password_hash, role (admin/user), full_name, address, pin_code |
+| `parking_lots` | id, prime_location_name, address, pin_code, price_per_hour, number_of_spots |
+| `parking_spots` | id, lot_id (FK), spot_number, status (A/O) |
+| `reservations` | id, spot_id (FK), user_id (FK), vehicle_number, parking_timestamp, leaving_timestamp, parking_cost |
+| `monthly_reports` | id, month, total_reservations, total_revenue, report_path |
+| `notifications` | id, user_id (FK), message, channel, is_read |
