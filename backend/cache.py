@@ -48,3 +48,13 @@ def cache_set(key, value, ttl=300):
         r.setex(key, ttl, json.dumps(value))
         return True
     except Exception:
+        return False
+
+
+def cache_delete(key):
+    r = get_redis()
+    if r is None:
+        return False
+    try:
+        r.delete(key)
+        return True
