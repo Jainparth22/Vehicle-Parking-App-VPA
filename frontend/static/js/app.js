@@ -116,3 +116,19 @@ const VPA = {
       'admin-create-lot':  'AdminCreateLot',
       'admin-edit-lot':    'AdminEditLot',
       'admin-users':       'AdminUsers',
+      'admin-search':      'AdminSearch',
+      'admin-analytics':   'AdminAnalytics',
+      'user-dashboard':    'UserDashboard',
+      'user-browse-lots':  'UserBrowseLots',
+      'user-reserve':      'UserReserve',
+      'user-release':      'UserRelease',
+      'user-history':      'UserHistory',
+      'user-analytics':    'UserAnalytics',
+    };
+
+    const activeComponent = computed(() => pageMap[currentPage.value] || 'AuthPage');
+
+    // ── Toast icon helper ────────────────────────────────
+    function toastIcon(type) {
+      return { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' }[type] || 'ℹ️';
+    }

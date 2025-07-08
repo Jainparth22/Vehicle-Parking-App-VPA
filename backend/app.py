@@ -131,3 +131,16 @@ def create_app():
         )
         db.session.add(user)
         db.session.commit()
+
+        token = generate_token(user)
+        return jsonify({
+            'message': 'Registration successful',
+            'token': token,
+            'user': user.to_dict(),
+        }), 201
+
+    @app.route('/api/auth/logout', methods=['POST'])
+    @login_required
+    def logout(user):
+        return jsonify({'message': 'Logged out successfully'}), 200
+

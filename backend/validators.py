@@ -17,3 +17,12 @@ def validate_password(password):
     if len(password) > 128:
         return False, 'Password too long'
     return True, None
+
+
+def validate_phone(phone):
+    if not phone:
+        return True, None  # optional
+    phone = phone.strip()
+    cleaned = re.sub(r'[\s\-\(\)\+]', '', phone)
+    if not cleaned.isdigit():
+        return False, 'Phone number should contain only digits'
