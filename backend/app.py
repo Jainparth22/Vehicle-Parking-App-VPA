@@ -115,3 +115,11 @@ def create_app():
 
         ok, err = validate_password(password)
         if not ok:
+            return jsonify({'error': err}), 400
+
+        if User.query.filter_by(email=email).first():
+            return jsonify({'error': 'Email already registered'}), 409
+
+        user = User(
+            email=email,
+            password_hash=generate_password_hash(password),
