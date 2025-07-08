@@ -65,3 +65,13 @@ const AuthPage = {
 
         <!-- LOGIN -->
         <form v-if="tab === 'login'" @submit.prevent="handleLogin">
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input v-model="loginForm.email" type="email" class="form-control" placeholder="admin@parkingapp.com" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input v-model="loginForm.password" type="password" class="form-control" placeholder="Enter password" required/>
+          </div>
+          <button type="submit" class="btn-vpa w-100" style="justify-content:center;padding:0.75rem" :disabled="loading">
+            <span v-if="loading" class="loader-ring" style="width:16px;height:16px;border-width:2px"></span>

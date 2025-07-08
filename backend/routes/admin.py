@@ -109,3 +109,16 @@ def create_lot(user):
         return jsonify({'error': err}), 400
     ok, err = validate_pin_code(pin_code)
     if not ok:
+        return jsonify({'error': err}), 400
+    ok, err = validate_price(price)
+    if not ok:
+        return jsonify({'error': err}), 400
+    ok, err = validate_spots(spots)
+    if not ok:
+        return jsonify({'error': err}), 400
+
+    lot = ParkingLot(
+        prime_location_name=name,
+        address=address,
+        pin_code=pin_code,
+        price_per_hour=float(price),

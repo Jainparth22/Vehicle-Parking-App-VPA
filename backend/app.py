@@ -144,3 +144,18 @@ def create_app():
     def logout(user):
         return jsonify({'message': 'Logged out successfully'}), 200
 
+    @app.route('/api/auth/me', methods=['GET'])
+    @login_required
+    def current_user_info(user):
+        return jsonify({'user': user.to_dict()}), 200
+
+    @app.route('/api/auth/me', methods=['PUT'])
+    @login_required
+    def update_profile(user):
+        data = request.json or {}
+        if data.get('full_name'):
+            user.full_name = data['full_name'].strip()
+        if data.get('address'):
+            user.address = data['address'].strip()
+        if data.get('pin_code'):
+            user.pin_code = data['pin_code'].strip()
