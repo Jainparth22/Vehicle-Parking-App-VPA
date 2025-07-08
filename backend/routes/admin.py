@@ -122,3 +122,9 @@ def create_lot(user):
         address=address,
         pin_code=pin_code,
         price_per_hour=float(price),
+        number_of_spots=int(spots),
+    )
+    db.session.add(lot)
+    db.session.flush()  # Get lot.id
+
+    # Create spots

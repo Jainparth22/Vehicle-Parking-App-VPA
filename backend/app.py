@@ -168,3 +168,10 @@ def create_app():
     @login_required
     def get_notifications(user):
         notifications = Notification.query.filter_by(user_id=user.id).order_by(
+            Notification.created_at.desc()
+        ).limit(50).all()
+        return jsonify([n.to_dict() for n in notifications]), 200
+
+    @app.route('/api/notifications/<int:id>/read', methods=['PUT'])
+    @login_required
+    def mark_notification_read(user, id):

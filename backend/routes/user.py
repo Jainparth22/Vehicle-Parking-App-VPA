@@ -86,3 +86,8 @@ def search_lots(user):
     ).all()
 
     # Attach availability
+    results = []
+    for lot in lots:
+        d = lot.to_dict()
+        d['available_spots'] = lot.spots.filter_by(status='A').count()
+        results.append(d)
