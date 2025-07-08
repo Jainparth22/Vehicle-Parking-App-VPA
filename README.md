@@ -109,3 +109,8 @@ P2 vehicle-parking-app/
 ---
 
 ## 🛠️ Installation & Setup
+
+### 1. Clone / Navigate to project
+```bash
+cd "P2 vehicle-parking-app"
+```

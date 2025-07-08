@@ -132,3 +132,12 @@ const VPA = {
     function toastIcon(type) {
       return { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' }[type] || 'ℹ️';
     }
+
+    // ── Provide to child components ───────────────────────
+    provide('navigate',    navigate);
+    provide('showToast',   showToast);
+    provide('setUser',     setUser);
+    provide('currentUser', currentUser);
+    provide('navData',     navPayload);
+
+    return {
