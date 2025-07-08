@@ -50,3 +50,18 @@ const AuthPage = {
     return { tab, loading, loginForm, regForm, handleLogin, handleRegister };
   },
   template: `
+    <div class="auth-page">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="logo-icon">🅿️</div>
+          <h2 style="margin-bottom:0.25rem">Vehicle Parking App</h2>
+          <p class="text-muted text-sm">Smart parking management</p>
+        </div>
+
+        <div class="auth-tabs">
+          <button class="auth-tab" :class="{ active: tab === 'login' }" @click="tab='login'">Login</button>
+          <button class="auth-tab" :class="{ active: tab === 'register' }" @click="tab='register'">Register</button>
+        </div>
+
+        <!-- LOGIN -->
+        <form v-if="tab === 'login'" @submit.prevent="handleLogin">
