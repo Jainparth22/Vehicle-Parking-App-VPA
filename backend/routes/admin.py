@@ -100,3 +100,12 @@ def create_lot(user):
     price = data.get('price_per_hour', 0)
     spots = data.get('number_of_spots', 0)
 
+    # Validate
+    ok, err = validate_name(name, 'Location name')
+    if not ok:
+        return jsonify({'error': err}), 400
+    ok, err = validate_name(address, 'Address')
+    if not ok:
+        return jsonify({'error': err}), 400
+    ok, err = validate_pin_code(pin_code)
+    if not ok:

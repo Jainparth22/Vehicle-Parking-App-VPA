@@ -104,3 +104,8 @@ P2 vehicle-parking-app/
 | `reservations` | id, spot_id (FK), user_id (FK), vehicle_number, parking_timestamp, leaving_timestamp, parking_cost |
 | `monthly_reports` | id, month, total_reservations, total_revenue, report_path |
 | `notifications` | id, user_id (FK), message, channel, is_read |
+| `async_jobs` | id, user_id (FK), job_type, status, file_path |
+
+---
+
+## 🛠️ Installation & Setup

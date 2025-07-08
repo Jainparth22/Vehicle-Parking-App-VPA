@@ -123,3 +123,11 @@ def create_app():
         user = User(
             email=email,
             password_hash=generate_password_hash(password),
+            role='user',
+            full_name=full_name,
+            address=data.get('address', ''),
+            pin_code=data.get('pin_code', ''),
+            is_active=True,
+        )
+        db.session.add(user)
+        db.session.commit()
