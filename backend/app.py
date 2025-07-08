@@ -159,3 +159,12 @@ def create_app():
             user.address = data['address'].strip()
         if data.get('pin_code'):
             user.pin_code = data['pin_code'].strip()
+        db.session.commit()
+        return jsonify({'message': 'Profile updated', 'user': user.to_dict()}), 200
+
+    # ── Notification Routes ───────────────────────────────────────
+
+    @app.route('/api/notifications', methods=['GET'])
+    @login_required
+    def get_notifications(user):
+        notifications = Notification.query.filter_by(user_id=user.id).order_by(

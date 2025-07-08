@@ -90,3 +90,17 @@ def send_daily_reminders():
                             for l in new_lots[:5]
                         ])
                         new_lot_html = f'<h3>🆕 New Parking Lots Available</h3><ul>{lot_items}</ul>'
+
+                    email_body = f"""
+                    <html><body>
+                    <h2>🅿️ Vehicle Parking App — Daily Reminder</h2>
+                    <p>Hi {user.full_name or 'there'},</p>
+                    <p>You haven't booked a parking spot recently. Planning to drive today?
+                    Visit the Parking App to find an available spot near you!</p>
+                    {new_lot_html}
+                    <p>Log in now to reserve your spot before they fill up!</p>
+                    <p>Best regards,<br>Parking App Team</p>
+                    </body></html>
+                    """
+                    send_email(
+                        subject='🅿️ Parking App — Don\'t forget to book your spot!',
