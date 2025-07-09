@@ -141,3 +141,18 @@ const VPA = {
     provide('navData',     navPayload);
 
     return {
+      currentPage, navPayload, currentUser, toasts, notifCount,
+      activeComponent, navigate, logout, showToast, dismissToast, toastIcon,
+    };
+  },
+
+  template: `
+    <div class="page-wrapper">
+
+      <!-- ── Navbar (hidden on auth page) ── -->
+      <nav class="vpa-navbar" v-if="currentUser">
+        <button class="navbar-brand" @click="navigate(currentUser.role === 'admin' ? 'admin-dashboard' : 'user-dashboard')" style="background:none;border:none;cursor:pointer">
+          <div class="brand-icon">🅿️</div>
+          <span>VPA</span>
+        </button>
+

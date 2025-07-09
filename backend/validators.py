@@ -26,3 +26,10 @@ def validate_phone(phone):
     cleaned = re.sub(r'[\s\-\(\)\+]', '', phone)
     if not cleaned.isdigit():
         return False, 'Phone number should contain only digits'
+    if len(cleaned) < 7 or len(cleaned) > 15:
+        return False, 'Phone number should be 7-15 digits'
+    return True, None
+
+
+def validate_pin_code(pin_code):
+    if not pin_code:
