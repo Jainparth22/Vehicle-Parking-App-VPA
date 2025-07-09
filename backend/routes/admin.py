@@ -128,3 +128,19 @@ def create_lot(user):
     db.session.flush()  # Get lot.id
 
     # Create spots
+    for i in range(1, int(spots) + 1):
+        db.session.add(ParkingSpot(lot_id=lot.id, spot_number=i, status='A'))
+
+    db.session.commit()
+    cache_delete('admin:dashboard')
+    cache_delete_pattern('user:lots*')
+    return jsonify({'message': 'Parking lot created successfully', 'lot': lot.to_dict(include_spots=True)}), 201
+
+
+@admin_bp.route('/lots/<int:lot_id>', methods=['GET'])
+@role_required('admin')
+def get_lot(user, lot_id):
+    lot = ParkingLot.query.get_or_404(lot_id)
+    return jsonify(lot.to_dict(include_spots=True)), 200
+
+

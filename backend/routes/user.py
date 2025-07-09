@@ -91,3 +91,14 @@ def search_lots(user):
         d = lot.to_dict()
         d['available_spots'] = lot.spots.filter_by(status='A').count()
         results.append(d)
+
+    return jsonify(results), 200
+
+
+@user_bp.route('/lots/<int:lot_id>', methods=['GET'])
+@role_required('user')
+def get_lot_details(user, lot_id):
+    lot = ParkingLot.query.get_or_404(lot_id)
+    return jsonify(lot.to_dict()), 200
+
+
