@@ -192,3 +192,22 @@ def create_app():
     # ── Async Job Status ──────────────────────────────────────────
 
     @app.route('/api/jobs/<int:job_id>', methods=['GET'])
+    @login_required
+    def get_job_status(user, job_id):
+        job = AsyncJob.query.get_or_404(job_id)
+        if job.user_id != user.id:
+            return jsonify({'error': 'Unauthorized'}), 403
+        return jsonify(job.to_dict()), 200
+
+    # ── Serve Frontend SPA ────────────────────────────────────────
+
+    @app.route('/')
+    def index():
+        return render_template('index.html')
+
+    @app.errorhandler(404)
+    def not_found(e):
+        if request.path.startswith('/api/'):
+            return jsonify({'error': 'Not found'}), 404
+        return render_template('index.html')
+

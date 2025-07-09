@@ -129,3 +129,17 @@ pip install -r requirements.txt
 
 ### 4. Configure environment
 ```bash
+copy .env.example .env    # Windows
+cp .env.example .env      # Mac/Linux
+# Edit .env with your settings
+```
+
+### 5. Run the app
+```bash
+python run.py
+# Open http://localhost:5002
+```
+
+### 6. (Optional) Start Celery workers
+```bash
+cd backend

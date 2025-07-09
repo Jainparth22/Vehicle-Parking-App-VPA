@@ -124,3 +124,20 @@ class Reservation(db.Model):
     def get_lot_address(self):
         if self.lot_address_at_booking:
             return self.lot_address_at_booking
+        if self.spot and self.spot.lot:
+            return self.spot.lot.address
+        return 'Address unavailable'
+
+    def get_spot_number(self):
+        if self.spot_number_at_booking:
+            return self.spot_number_at_booking
+        if self.spot:
+            return self.spot.spot_number
+        return '?'
+
+    def to_dict(self):
+        current_cost = 0.0
+        if self.leaving_timestamp is None and self.parking_timestamp:
+            duration_hours = (datetime.utcnow() - self.parking_timestamp).total_seconds() / 3600
+            current_cost = round((self.price_per_hour_at_booking or 0.0) * duration_hours, 2)
+        return {
