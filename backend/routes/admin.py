@@ -144,3 +144,15 @@ def get_lot(user, lot_id):
     return jsonify(lot.to_dict(include_spots=True)), 200
 
 
+@admin_bp.route('/lots/<int:lot_id>', methods=['PUT'])
+@role_required('admin')
+def edit_lot(user, lot_id):
+    lot = ParkingLot.query.get_or_404(lot_id)
+    data = request.json or {}
+
+    name = data.get('prime_location_name', lot.prime_location_name).strip()
+    address = data.get('address', lot.address).strip()
+    pin_code = data.get('pin_code', lot.pin_code).strip()
+    price = data.get('price_per_hour', lot.price_per_hour)
+    new_spots = int(data.get('number_of_spots', lot.number_of_spots))
+

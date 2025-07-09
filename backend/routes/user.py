@@ -102,3 +102,9 @@ def get_lot_details(user, lot_id):
     return jsonify(lot.to_dict()), 200
 
 
+# ── Reserve Spot ──────────────────────────────────────────────────────────────
+
+@user_bp.route('/reserve/<int:lot_id>', methods=['POST'])
+@role_required('user')
+def reserve_spot(user, lot_id):
+    lot = ParkingLot.query.get_or_404(lot_id)
