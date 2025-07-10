@@ -208,3 +208,60 @@ def my_reservations(user):
 
     if status == 'active':
         query = query.filter(Reservation.leaving_timestamp.is_(None))
+    elif status == 'completed':
+        query = query.filter(Reservation.leaving_timestamp.isnot(None))
+
+    reservations = query.order_by(Reservation.parking_timestamp.desc()).all()
+    return jsonify([r.to_dict() for r in reservations]), 200
+
+
+@user_bp.route('/reservations/<int:reservation_id>', methods=['GET'])
+@role_required('user')
+def get_reservation(user, reservation_id):
+    reservation = Reservation.query.get_or_404(reservation_id)
+    if reservation.user_id != user.id:
+        return jsonify({'error': 'Unauthorized'}), 403
+    return jsonify(reservation.to_dict()), 200
+
+
+# ── Summary / Analytics for User ─────────────────────────────────────────────
+
+@user_bp.route('/analytics', methods=['GET'])
+@role_required('user')
+def user_analytics(user):
+    reservations = Reservation.query.filter_by(user_id=user.id).all()
+    completed = [r for r in reservations if r.leaving_timestamp]
+
+    total_spent = sum(r.parking_cost for r in completed)
+    total_hours = sum(
+        (r.leaving_timestamp - r.parking_timestamp).total_seconds() / 3600
+        for r in completed
+        if r.parking_timestamp and r.leaving_timestamp
+    )
+
+    # Most used lot
+    lot_counts = {}
+    for res in completed:
+        lot_name = res.get_lot_name()
+        lot_counts[lot_name] = lot_counts.get(lot_name, 0) + 1
+    most_used = max(lot_counts, key=lot_counts.get) if lot_counts else None
+
+    # Monthly spending
+    monthly = {}
+    for res in completed:
+        if res.parking_timestamp:
+            month = res.parking_timestamp.strftime('%Y-%m')
+            monthly[month] = monthly.get(month, 0) + res.parking_cost
+    monthly_data = [
+        {'month': k, 'amount': round(v, 2)}
+        for k, v in sorted(monthly.items())[-6:]
+    ]
+
+    # Lot breakdown for pie chart
+    lot_breakdown = [
+        {'lot': k, 'count': v, 'percentage': round(v / len(completed) * 100, 1) if completed else 0}
+        for k, v in lot_counts.items()
+    ]
+
+    return jsonify({
+        'total_reservations': len(reservations),

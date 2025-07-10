@@ -75,3 +75,72 @@ const AuthPage = {
           </div>
           <button type="submit" class="btn-vpa w-100" style="justify-content:center;padding:0.75rem" :disabled="loading">
             <span v-if="loading" class="loader-ring" style="width:16px;height:16px;border-width:2px"></span>
+            <span v-else>🔐 Sign In</span>
+          </button>
+          <p class="text-center mt-2 text-sm text-muted">No registration needed for Admin</p>
+        </form>
+
+        <!-- REGISTER -->
+        <form v-else @submit.prevent="handleRegister">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input v-model="regForm.full_name" type="text" class="form-control" placeholder="Your full name" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email ID (Username)</label>
+            <input v-model="regForm.email" type="email" class="form-control" placeholder="you@email.com" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input v-model="regForm.password" type="password" class="form-control" placeholder="Min 6 characters" required/>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Address</label>
+              <input v-model="regForm.address" type="text" class="form-control" placeholder="Street address"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pin Code</label>
+              <input v-model="regForm.pin_code" type="text" class="form-control" placeholder="6-digit PIN" maxlength="6"/>
+            </div>
+          </div>
+          <button type="submit" class="btn-vpa w-100" style="justify-content:center;padding:0.75rem" :disabled="loading">
+            <span v-if="loading" class="loader-ring" style="width:16px;height:16px;border-width:2px"></span>
+            <span v-else>🚀 Create Account</span>
+          </button>
+          <p class="text-center mt-2 text-sm text-muted">Admin login? Use the Login tab.</p>
+        </form>
+      </div>
+    </div>
+  `
+};
+
+// ── Admin Dashboard ────────────────────────────────────────
+const AdminDashboard = {
+  setup() {
+    const { ref, onMounted, inject } = Vue;
+    const navigate   = inject('navigate');
+    const showToast  = inject('showToast');
+    const navData    = inject('navData');
+    const stats      = ref(null);
+    const loading    = ref(true);
+
+    async function load() {
+      try {
+        const res = await api.get('/admin/dashboard');
+        stats.value = res.data;
+      } catch(e) {
+        showToast('Failed to load dashboard', 'error');
+      } finally { loading.value = false; }
+    }
+
+    async function deleteLot(lot) {
+      if (!confirm(`Delete "${lot.prime_location_name}"? This cannot be undone.`)) return;
+      try {
+        await api.delete(`/admin/lots/${lot.id}`);
+        showToast(`"${lot.prime_location_name}" deleted`, 'success');
+        load();
+      } catch(e) {
+        showToast(e.response?.data?.error || 'Delete failed', 'error');
+      }
+    }
