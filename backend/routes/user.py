@@ -265,3 +265,44 @@ def user_analytics(user):
 
     return jsonify({
         'total_reservations': len(reservations),
+        'completed_reservations': len(completed),
+        'active_reservations': len(reservations) - len(completed),
+        'total_spent': round(total_spent, 2),
+        'total_hours': round(total_hours, 2),
+        'most_used_lot': most_used,
+        'monthly_spending': monthly_data,
+        'lot_breakdown': lot_breakdown,
+    }), 200
+
+
+# ── Export CSV (Async) ────────────────────────────────────────────────────────
+
+@user_bp.route('/export-csv', methods=['POST'])
+@role_required('user')
+def trigger_csv_export(user):
+    from tasks import export_parking_csv
+
+    job = AsyncJob(user_id=user.id, job_type='csv_export', status='pending')
+    db.session.add(job)
+    db.session.commit()
+
+    export_parking_csv.delay(user_id=user.id, job_id=job.id)
+    return jsonify({
+        'message': 'CSV export started. You\'ll be notified when it\'s ready.',
+        'job_id': job.id,
+    }), 202
+
+
+@user_bp.route('/download-csv/<int:job_id>', methods=['GET'])
+@role_required('user')
+def download_csv(user, job_id):
+    job = AsyncJob.query.get_or_404(job_id)
+
+    if job.user_id != user.id:
+        return jsonify({'error': 'Unauthorized'}), 403
+    if job.status != 'completed':
+        return jsonify({'status': job.status, 'message': 'Export not ready yet'}), 202
+    if not job.file_path or not os.path.exists(job.file_path):
+        return jsonify({'error': 'File not found'}), 404
+
+    return send_file(job.file_path, as_attachment=True, download_name='parking_history.csv')

@@ -115,3 +115,92 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
   background: var(--highlight);
   color: white;
   border-radius: 50%;
+  font-size: 0.65rem;
+  padding: 2px 5px;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+/* ── Glass Card ───────────────────────────────────────────── */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: all var(--transition);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+.glass-card-flat {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+/* ── Stat Cards ───────────────────────────────────────────── */
+.stat-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.stat-card.accent-red::before   { background: var(--highlight); }
+.stat-card.accent-green::before { background: var(--success); }
+.stat-card.accent-yellow::before{ background: var(--warning); }
+.stat-card.accent-blue::before  { background: var(--info); }
+
+.stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.stat-number { font-size: 2rem; font-weight: 800; line-height: 1; }
+.stat-label  { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-icon   { font-size: 2rem; opacity: 0.3; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
+
+/* ── Buttons ──────────────────────────────────────────────── */
+.btn-vpa {
+  background: linear-gradient(135deg, var(--highlight), var(--highlight-soft));
+  border: none;
+  color: white;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: 'Inter', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-vpa:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4); }
+.btn-vpa:active { transform: translateY(0); }
+
+.btn-vpa-outline {
+  background: transparent;
+  border: 1.5px solid var(--glass-border);
+  color: var(--text);
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition);
