@@ -288,3 +288,129 @@ const AdminDashboard = {
                 <tr v-for="r in stats.recent_reservations" :key="r.id">
                   <td>{{ r.user_email }}</td>
                   <td>{{ r.lot_name }}</td>
+                  <td>#{{ r.spot_number }}</td>
+                  <td>{{ r.vehicle_number || '—' }}</td>
+                  <td class="text-sm text-muted">{{ formatTime(r.parking_timestamp) }}</td>
+                  <td>
+                    <span v-if="r.is_active" class="badge-vpa badge-active">Active</span>
+                    <span v-else class="badge-vpa badge-completed">Done</span>
+                  </td>
+                  <td class="fw-600">{{ r.is_active ? '₹'+r.current_cost.toFixed(2)+' live' : '₹'+r.parking_cost.toFixed(2) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </template>
+    </div>
+  `,
+  methods: {
+    formatTime(ts) {
+      if (!ts) return '—';
+      return new Date(ts).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' });
+    }
+  }
+};
+
+// ── Admin — Lot Detail (Spots Grid) ───────────────────────
+const AdminLotDetail = {
+  props: ['navData'],
+  setup(props) {
+    const { ref, onMounted, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const lot       = ref(null);
+    const selected  = ref(null);  // selected spot reservation
+    const loading   = ref(true);
+
+    async function load() {
+      const id = props.navData?.id;
+      if (!id) { navigate('admin-dashboard'); return; }
+      try {
+        const res = await api.get(`/admin/lots/${id}`);
+        lot.value = res.data;
+      } catch(e) {
+        showToast('Failed to load lot details', 'error');
+      } finally { loading.value = false; }
+    }
+
+    function clickSpot(spot) {
+      if (spot.status === 'O' && spot.active_reservation) {
+        selected.value = spot.active_reservation;
+      }
+    }
+
+    onMounted(load);
+    return { lot, loading, selected, navigate, clickSpot };
+  },
+  template: `
+    <div>
+      <div class="flex-gap mb-4">
+        <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('admin-dashboard')">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <h2 v-if="lot">{{ lot.prime_location_name }}</h2>
+      </div>
+
+      <div v-if="loading" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
+
+      <template v-else-if="lot">
+        <div class="glass-card-flat mb-4">
+          <div class="grid-4">
+            <div><p class="stat-label">Address</p><p class="fw-600">{{ lot.address }}</p></div>
+            <div><p class="stat-label">Pin Code</p><p class="fw-600">{{ lot.pin_code }}</p></div>
+            <div><p class="stat-label">Price</p><p class="fw-600 text-warning">₹{{ lot.price_per_hour }}/hr</p></div>
+            <div><p class="stat-label">Capacity</p><p class="fw-600">{{ lot.number_of_spots }} spots</p></div>
+          </div>
+        </div>
+
+        <div class="glass-card-flat mb-4">
+          <div class="flex-between mb-3">
+            <h3>Spot Map</h3>
+            <div class="flex-gap text-sm">
+              <span style="color:var(--success)"><i class="bi bi-square-fill"></i> Available</span>
+              <span style="color:var(--highlight)"><i class="bi bi-square-fill"></i> Occupied (click for details)</span>
+            </div>
+          </div>
+          <div class="spots-grid">
+            <div v-for="spot in lot.spots" :key="spot.id"
+              class="spot-cell"
+              :class="spot.status === 'A' ? 'available' : 'occupied clickable'"
+              @click="clickSpot(spot)"
+              :title="spot.status === 'O' ? 'Click to see reservation details' : 'Available'">
+              {{ spot.spot_number }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Spot Detail Modal -->
+        <div v-if="selected" class="modal-overlay" @click.self="selected=null">
+          <div class="modal-box">
+            <div class="modal-header">
+              <h3>🚗 Occupied Spot Details</h3>
+              <button class="modal-close" @click="selected=null">✕</button>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+              <div><p class="stat-label">Spot #</p><p class="fw-600">{{ selected.spot_number }}</p></div>
+              <div><p class="stat-label">Vehicle</p><p class="fw-600">{{ selected.vehicle_number || '—' }}</p></div>
+              <div><p class="stat-label">Customer</p><p class="fw-600">{{ selected.user_email }}</p></div>
+              <div><p class="stat-label">Name</p><p class="fw-600">{{ selected.user_name || '—' }}</p></div>
+              <div><p class="stat-label">Parked At</p><p class="fw-600">{{ new Date(selected.parking_timestamp).toLocaleString('en-IN') }}</p></div>
+              <div><p class="stat-label">Running Cost</p><p class="fw-600 text-warning">₹{{ selected.current_cost.toFixed(2) }}</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-gap">
+          <button class="btn-vpa" @click="navigate('admin-edit-lot', {id: lot.id})">
+            <i class="bi bi-pencil"></i> Edit This Lot
+          </button>
+        </div>
+      </template>
+    </div>
+  `
+};
+
+// ── Admin — Create Lot ─────────────────────────────────────
+const AdminCreateLot = {
+  setup() {
