@@ -414,3 +414,60 @@ const AdminLotDetail = {
 // ── Admin — Create Lot ─────────────────────────────────────
 const AdminCreateLot = {
   setup() {
+    const { ref, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const loading   = ref(false);
+    const form = ref({
+      prime_location_name: '', address: '', pin_code: '',
+      price_per_hour: '', number_of_spots: ''
+    });
+
+    async function submit() {
+      loading.value = true;
+      try {
+        await api.post('/admin/lots', form.value);
+        showToast('Parking lot created successfully! 🏢', 'success');
+        navigate('admin-dashboard');
+      } catch(e) {
+        showToast(e.response?.data?.error || 'Failed to create lot', 'error');
+      } finally { loading.value = false; }
+    }
+
+    return { form, loading, navigate, submit };
+  },
+  template: `
+    <div style="max-width:600px;margin:0 auto">
+      <div class="flex-gap mb-4">
+        <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('admin-dashboard')">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <h2>Create Parking Lot</h2>
+      </div>
+      <div class="glass-card-flat">
+        <form @submit.prevent="submit">
+          <div class="form-group">
+            <label class="form-label">Prime Location Name *</label>
+            <input v-model="form.prime_location_name" class="form-control" placeholder="e.g. Downtown Central Parking" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Address *</label>
+            <input v-model="form.address" class="form-control" placeholder="Full street address" required/>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">PIN Code *</label>
+              <input v-model="form.pin_code" class="form-control" placeholder="6-digit PIN" maxlength="6" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price per Hour (₹) *</label>
+              <input v-model="form.price_per_hour" type="number" step="0.5" min="1" class="form-control" placeholder="e.g. 50" required/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Maximum Number of Spots *</label>
+            <input v-model="form.number_of_spots" type="number" min="1" max="1000" class="form-control" placeholder="e.g. 50" required/>
+            <p class="text-xs text-muted mt-1">Spots will be auto-created from 1 to max</p>
+          </div>
+          <div class="flex-gap" style="margin-top:1.5rem">
+            <button type="submit" class="btn-vpa" :disabled="loading">
