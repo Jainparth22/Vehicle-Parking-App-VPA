@@ -108,3 +108,103 @@ def get_lot_details(user, lot_id):
 @role_required('user')
 def reserve_spot(user, lot_id):
     lot = ParkingLot.query.get_or_404(lot_id)
+    data = request.json or {}
+    vehicle_number = data.get('vehicle_number', '').strip().upper()
+
+    ok, err = validate_vehicle_number(vehicle_number)
+    if not ok:
+        return jsonify({'error': err}), 400
+
+    # Find first available spot
+    spot = ParkingSpot.query.filter_by(lot_id=lot_id, status='A').order_by(
+        ParkingSpot.spot_number.asc()
+    ).first()
+
+    if not spot:
+        return jsonify({'error': 'No available spots in this parking lot'}), 400
+
+    # Create reservation
+    reservation = Reservation(
+        spot_id=spot.id,
+        user_id=user.id,
+        vehicle_number=vehicle_number or None,
+        parking_timestamp=datetime.utcnow(),
+        # Snapshot lot data at booking time
+        lot_id_at_booking=lot.id,
+        lot_name_at_booking=lot.prime_location_name,
+        lot_address_at_booking=lot.address,
+        price_per_hour_at_booking=lot.price_per_hour,
+        spot_number_at_booking=spot.spot_number,
+    )
+
+    spot.status = 'O'
+    db.session.add(reservation)
+    db.session.commit()
+
+    # In-app notification
+    notif = Notification(
+        user_id=user.id,
+        message=f'Spot #{spot.spot_number} reserved at {lot.prime_location_name}. Happy parking!',
+        channel='in-app',
+        is_sent=True,
+    )
+    db.session.add(notif)
+    db.session.commit()
+
+    cache_delete('admin:dashboard')
+    cache_delete_pattern('user:lots*')
+    return jsonify({
+        'message': f'Spot #{spot.spot_number} reserved successfully at {lot.prime_location_name}!',
+        'reservation': reservation.to_dict(),
+    }), 201
+
+
+# ── Release Spot ──────────────────────────────────────────────────────────────
+
+@user_bp.route('/reservations/<int:reservation_id>/release', methods=['PUT'])
+@role_required('user')
+def release_spot(user, reservation_id):
+    reservation = Reservation.query.get_or_404(reservation_id)
+
+    if reservation.user_id != user.id:
+        return jsonify({'error': 'Unauthorized — this is not your reservation'}), 403
+
+    if reservation.leaving_timestamp:
+        return jsonify({'error': 'This reservation has already been completed'}), 400
+
+    reservation.leaving_timestamp = datetime.utcnow()
+    reservation.calculate_cost()
+
+    spot = ParkingSpot.query.get(reservation.spot_id)
+    if spot:
+        spot.status = 'A'
+
+    db.session.commit()
+
+    notif = Notification(
+        user_id=user.id,
+        message=f'Spot #{reservation.get_spot_number()} released. Total cost: ₹{reservation.parking_cost:.2f}',
+        channel='in-app',
+        is_sent=True,
+    )
+    db.session.add(notif)
+    db.session.commit()
+
+    cache_delete('admin:dashboard')
+    cache_delete_pattern('user:lots*')
+    return jsonify({
+        'message': 'Parking spot released successfully',
+        'reservation': reservation.to_dict(),
+    }), 200
+
+
+# ── Reservations History ──────────────────────────────────────────────────────
+
+@user_bp.route('/reservations', methods=['GET'])
+@role_required('user')
+def my_reservations(user):
+    status = request.args.get('status', 'all')
+    query = Reservation.query.filter_by(user_id=user.id)
+
+    if status == 'active':
+        query = query.filter(Reservation.leaving_timestamp.is_(None))
