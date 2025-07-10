@@ -143,3 +143,56 @@ python run.py
 ### 6. (Optional) Start Celery workers
 ```bash
 cd backend
+celery -A celery_worker.celery worker --loglevel=info
+celery -A celery_worker.celery beat   --loglevel=info
+```
+
+---
+
+## 🔌 API Endpoints
+
+### Auth (`/api/auth/`)
+| Method | URL | Description |
+|---|---|---|
+| POST | `/api/auth/login` | Login → JWT token |
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/logout` | Logout |
+| GET | `/api/auth/me` | Get current user info |
+| PUT | `/api/auth/me` | Update profile |
+
+### Admin (`/api/admin/`) — `role: admin` required
+| Method | URL | Description |
+|---|---|---|
+| GET | `/api/admin/dashboard` | Stats: lots, spots, revenue, occupancy |
+| GET | `/api/admin/users` | List all registered users |
+| GET | `/api/admin/lots` | List all parking lots |
+| POST | `/api/admin/lots` | Create new parking lot |
+| GET | `/api/admin/lots/<id>` | Lot details with all spots |
+| PUT | `/api/admin/lots/<id>` | Edit lot |
+| DELETE | `/api/admin/lots/<id>` | Delete lot (only if all spots empty) |
+| GET | `/api/admin/lots/<id>/spots` | List all spots in a lot |
+| GET | `/api/admin/reservations` | All reservations (filter: status, lot_id) |
+| GET | `/api/admin/search?q=&type=` | Search lots/spots/users |
+| GET | `/api/admin/analytics` | Chart data: revenue, daily, occupancy |
+| GET | `/api/admin/reports` | List generated monthly reports |
+| POST | `/api/admin/reports/generate` | Trigger async monthly report |
+| GET | `/api/admin/reports/download/<id>` | Download report file |
+
+### User (`/api/user/`) — `role: user` required
+| Method | URL | Description |
+|---|---|---|
+| GET | `/api/user/dashboard` | User stats, active reservations, available lots |
+| GET | `/api/user/lots` | Browse all parking lots |
+| GET | `/api/user/lots/search?q=` | Search lots by name/address/PIN |
+| GET | `/api/user/lots/<id>` | Lot details |
+| POST | `/api/user/reserve/<lot_id>` | Book spot (vehicle_number optional) |
+| PUT | `/api/user/reservations/<id>/release` | Release spot + calculate cost |
+| GET | `/api/user/reservations` | My reservation history |
+| GET | `/api/user/reservations/<id>` | Single reservation details |
+| GET | `/api/user/analytics` | Personal stats + chart data |
+| POST | `/api/user/export-csv` | Trigger async CSV export |
+| GET | `/api/user/download-csv/<job_id>` | Download CSV when ready |
+
+### Notifications
+| Method | URL | Description |
+|---|---|---|
