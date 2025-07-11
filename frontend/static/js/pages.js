@@ -471,3 +471,16 @@ const AdminCreateLot = {
           </div>
           <div class="flex-gap" style="margin-top:1.5rem">
             <button type="submit" class="btn-vpa" :disabled="loading">
+              <span v-if="loading" class="loader-ring" style="width:14px;height:14px;border-width:2px"></span>
+              <span v-else><i class="bi bi-plus-lg"></i> Create Lot</span>
+            </button>
+            <button type="button" class="btn-vpa-outline" @click="navigate('admin-dashboard')">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `
+};
+
+// ── Admin — Edit Lot ───────────────────────────────────────
+const AdminEditLot = {

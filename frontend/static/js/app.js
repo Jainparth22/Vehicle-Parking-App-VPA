@@ -156,3 +156,19 @@ const VPA = {
           <span>VPA</span>
         </button>
 
+        <div class="navbar-links">
+          <!-- Admin nav -->
+          <template v-if="currentUser.role === 'admin'">
+            <button class="nav-link-btn" :class="{active: currentPage==='admin-dashboard'}" @click="navigate('admin-dashboard')">
+              <i class="bi bi-speedometer2"></i> Dashboard
+            </button>
+            <button class="nav-link-btn" :class="{active: currentPage==='admin-create-lot'}" @click="navigate('admin-create-lot')">
+              <i class="bi bi-plus-square"></i> Add Lot
+            </button>
+            <button class="nav-link-btn" :class="{active: currentPage==='admin-search'}" @click="navigate('admin-search')">
+              <i class="bi bi-search"></i> Search
+            </button>
+            <button class="nav-link-btn" :class="{active: currentPage==='admin-analytics'}" @click="navigate('admin-analytics')">
+              <i class="bi bi-bar-chart-line"></i> Analytics
+            </button>
+            <button class="nav-link-btn" :class="{active: currentPage==='admin-users'}" @click="navigate('admin-users')">
