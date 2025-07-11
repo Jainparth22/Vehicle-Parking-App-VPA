@@ -186,3 +186,23 @@ const VPA = {
             </button>
             <button class="nav-link-btn" :class="{active: currentPage==='user-history'}" @click="navigate('user-history')">
               <i class="bi bi-clock-history"></i> History
+            </button>
+            <button class="nav-link-btn" :class="{active: currentPage==='user-analytics'}" @click="navigate('user-analytics')">
+              <i class="bi bi-bar-chart"></i> Summary
+            </button>
+          </template>
+
+          <!-- Common -->
+          <button class="nav-link-btn" style="position:relative" @click="navigate(currentUser.role==='admin'?'admin-dashboard':'user-dashboard')">
+            <i class="bi bi-bell"></i>
+            <span v-if="notifCount > 0" class="notification-badge">{{ notifCount }}</span>
+          </button>
+          <button class="nav-link-btn btn-danger-nav" @click="logout">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </button>
+        </div>
+      </nav>
+
+      <!-- ── Page Content ── -->
+      <main class="page-content" :class="{'container-fluid': currentUser}">
+        <component

@@ -170,3 +170,19 @@ def edit_lot(user, lot_id):
         return jsonify({'error': err}), 400
 
     occupied_count = lot.spots.filter_by(status='O').count()
+    if new_spots < occupied_count:
+        return jsonify({
+            'error': f'Cannot reduce to {new_spots} spots — {occupied_count} spots are currently occupied'
+        }), 400
+
+    current_count = lot.spots.count()
+    if new_spots > current_count:
+        max_num = db.session.query(db.func.max(ParkingSpot.spot_number)).filter_by(lot_id=lot.id).scalar() or 0
+        for i in range(max_num + 1, max_num + (new_spots - current_count) + 1):
+            db.session.add(ParkingSpot(lot_id=lot.id, spot_number=i, status='A'))
+    elif new_spots < current_count:
+        to_remove = ParkingSpot.query.filter_by(lot_id=lot.id, status='A').order_by(
+            ParkingSpot.spot_number.desc()
+        ).limit(current_count - new_spots).all()
+        for spot in to_remove:
+            db.session.delete(spot)
