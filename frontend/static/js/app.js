@@ -172,3 +172,17 @@ const VPA = {
               <i class="bi bi-bar-chart-line"></i> Analytics
             </button>
             <button class="nav-link-btn" :class="{active: currentPage==='admin-users'}" @click="navigate('admin-users')">
+              <i class="bi bi-people"></i> Users
+            </button>
+          </template>
+
+          <!-- User nav -->
+          <template v-else>
+            <button class="nav-link-btn" :class="{active: currentPage==='user-dashboard'}" @click="navigate('user-dashboard')">
+              <i class="bi bi-house"></i> Home
+            </button>
+            <button class="nav-link-btn" :class="{active: currentPage==='user-browse-lots'}" @click="navigate('user-browse-lots')">
+              <i class="bi bi-search"></i> Find Parking
+            </button>
+            <button class="nav-link-btn" :class="{active: currentPage==='user-history'}" @click="navigate('user-history')">
+              <i class="bi bi-clock-history"></i> History

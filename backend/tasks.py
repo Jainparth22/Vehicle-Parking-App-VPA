@@ -104,3 +104,15 @@ def send_daily_reminders():
                     """
                     send_email(
                         subject='🅿️ Parking App — Don\'t forget to book your spot!',
+                        recipients=[user.email],
+                        html_body=email_body
+                    )
+
+                # Google Chat webhook
+                send_gchat_webhook(
+                    f'Reminder sent to {user.email}: "You haven\'t parked in 3 days.{new_lot_info}"'
+                )
+                count += 1
+
+        db.session.commit()
+        return {'status': 'success', 'reminders_sent': count}
