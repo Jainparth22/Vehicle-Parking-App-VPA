@@ -33,3 +33,14 @@ def validate_phone(phone):
 
 def validate_pin_code(pin_code):
     if not pin_code:
+        return False, 'PIN code is required'
+    pin_code = pin_code.strip()
+    if not pin_code.isdigit() or len(pin_code) != 6:
+        return False, 'PIN code must be exactly 6 digits'
+    return True, None
+
+
+def validate_name(name, field='Name'):
+    if not name or not name.strip():
+        return False, f'{field} is required'
+    if len(name.strip()) < 2:
