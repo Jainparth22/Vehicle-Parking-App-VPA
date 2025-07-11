@@ -484,3 +484,13 @@ const AdminCreateLot = {
 
 // ── Admin — Edit Lot ───────────────────────────────────────
 const AdminEditLot = {
+  props: ['navData'],
+  setup(props) {
+    const { ref, onMounted, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const loading   = ref(false);
+    const fetching  = ref(true);
+    const form = ref({
+      prime_location_name: '', address: '', pin_code: '',
+      price_per_hour: '', number_of_spots: ''

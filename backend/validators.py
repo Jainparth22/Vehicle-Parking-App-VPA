@@ -44,3 +44,16 @@ def validate_name(name, field='Name'):
     if not name or not name.strip():
         return False, f'{field} is required'
     if len(name.strip()) < 2:
+        return False, f'{field} must be at least 2 characters'
+    if len(name.strip()) > 200:
+        return False, f'{field} is too long'
+    return True, None
+
+
+def validate_price(price):
+    try:
+        val = float(price)
+        if val <= 0:
+            return False, 'Price must be greater than 0'
+        if val > 10000:
+            return False, 'Price seems too high. Max is ₹10,000/hour'

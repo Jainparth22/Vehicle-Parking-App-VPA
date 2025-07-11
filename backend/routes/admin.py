@@ -162,3 +162,11 @@ def edit_lot(user, lot_id):
     ok, err = validate_pin_code(pin_code)
     if not ok:
         return jsonify({'error': err}), 400
+    ok, err = validate_price(price)
+    if not ok:
+        return jsonify({'error': err}), 400
+    ok, err = validate_spots(new_spots)
+    if not ok:
+        return jsonify({'error': err}), 400
+
+    occupied_count = lot.spots.filter_by(status='O').count()
