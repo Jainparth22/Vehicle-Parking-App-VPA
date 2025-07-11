@@ -156,3 +156,9 @@ def edit_lot(user, lot_id):
     price = data.get('price_per_hour', lot.price_per_hour)
     new_spots = int(data.get('number_of_spots', lot.number_of_spots))
 
+    ok, err = validate_name(name, 'Location name')
+    if not ok:
+        return jsonify({'error': err}), 400
+    ok, err = validate_pin_code(pin_code)
+    if not ok:
+        return jsonify({'error': err}), 400
