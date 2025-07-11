@@ -196,3 +196,23 @@ celery -A celery_worker.celery beat   --loglevel=info
 ### Notifications
 | Method | URL | Description |
 |---|---|---|
+| GET | `/api/notifications` | My notifications |
+| PUT | `/api/notifications/<id>/read` | Mark one as read |
+| PUT | `/api/notifications/read-all` | Mark all as read |
+| GET | `/api/jobs/<job_id>` | Poll async job status |
+
+---
+
+## 🔐 Default Credentials
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | `admin@parkingapp.com` | `admin123` |
+| User | Register via the app | — |
+
+> Change these in your `.env` file before deploying.
+
+---
+
+## 📊 Business Logic
+
