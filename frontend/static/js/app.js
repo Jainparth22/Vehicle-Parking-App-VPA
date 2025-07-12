@@ -218,3 +218,9 @@ const VPA = {
           <span>{{ toastIcon(t.type) }}</span>
           <span style="flex:1">{{ t.message }}</span>
           <span style="opacity:0.5;font-size:0.75rem">✕</span>
+        </div>
+      </div>
+
+    </div>
+  `
+};
