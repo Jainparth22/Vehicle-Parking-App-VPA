@@ -204,3 +204,12 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
   font-size: 0.875rem;
   cursor: pointer;
   transition: all var(--transition);
+  font-family: 'Inter', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-vpa-outline:hover {
+  background: var(--glass-bg);
+  border-color: rgba(255,255,255,0.3);
