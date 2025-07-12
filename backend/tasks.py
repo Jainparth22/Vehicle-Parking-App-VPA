@@ -116,3 +116,18 @@ def send_daily_reminders():
 
         db.session.commit()
         return {'status': 'success', 'reminders_sent': count}
+    except Exception as e:
+        db.session.rollback()
+        return {'status': 'error', 'message': str(e)}
+
+
+@celery.task(name='tasks.generate_monthly_report')
+def generate_monthly_report(job_id=None):
+    """
+    Monthly report task:
+    - Total reservations and revenue for the month
+    - Most used parking lot
+    - Per-user statistics
+    - Generates HTML + PDF, emails admin
+    """
+    job = None

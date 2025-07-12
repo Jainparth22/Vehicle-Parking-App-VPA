@@ -197,3 +197,13 @@ def edit_lot(user, lot_id):
     cache_delete('admin:dashboard')
     cache_delete_pattern('user:lots*')
     return jsonify({'message': 'Parking lot updated', 'lot': lot.to_dict(include_spots=True)}), 200
+
+
+@admin_bp.route('/lots/<int:lot_id>', methods=['DELETE'])
+@role_required('admin')
+def delete_lot(user, lot_id):
+    lot = ParkingLot.query.get_or_404(lot_id)
+    lot_name = lot.prime_location_name
+
+    occupied = lot.spots.filter_by(status='O').count()
+    if occupied > 0:

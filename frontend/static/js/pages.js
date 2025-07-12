@@ -510,3 +510,9 @@ const AdminEditLot = {
         };
       } catch(e) {
         showToast('Failed to load lot', 'error');
+      } finally { fetching.value = false; }
+    });
+
+    async function submit() {
+      loading.value = true;
+      try {
