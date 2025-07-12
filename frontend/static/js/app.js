@@ -206,3 +206,15 @@ const VPA = {
       <!-- ── Page Content ── -->
       <main class="page-content" :class="{'container-fluid': currentUser}">
         <component
+          :is="activeComponent"
+          :nav-data="navPayload"
+          :key="currentPage + JSON.stringify(navPayload)"
+        />
+      </main>
+
+      <!-- ── Toast Notifications ── -->
+      <div class="toast-container">
+        <div v-for="t in toasts" :key="t.id" class="toast-item" :class="'toast-'+t.type" @click="dismissToast(t.id)" style="cursor:pointer">
+          <span>{{ toastIcon(t.type) }}</span>
+          <span style="flex:1">{{ t.message }}</span>
+          <span style="opacity:0.5;font-size:0.75rem">✕</span>

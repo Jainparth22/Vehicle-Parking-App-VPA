@@ -216,3 +216,13 @@ celery -A celery_worker.celery beat   --loglevel=info
 
 ## 📊 Business Logic
 
+- **Spot assignment**: Always auto-assigns the **first available spot** (lowest spot number). Users cannot select a specific spot.
+- **Cost calculation**: `duration_hours × price_per_hour_at_booking`. Historical price is preserved even if the lot's price changes later.
+- **Delete restriction**: A parking lot can only be deleted if **all spots are unoccupied**.
+- **Historical preservation**: Reservations store lot name, address, and price at booking time — data remains intact even if the lot is later deleted.
+
+---
+
+## 📝 Notes
+
+- The database is created programmatically via `db.create_all()` — no manual DB creation required.

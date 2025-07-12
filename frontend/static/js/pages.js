@@ -516,3 +516,20 @@ const AdminEditLot = {
     async function submit() {
       loading.value = true;
       try {
+        await api.put(`/admin/lots/${lotId}`, form.value);
+        showToast('Parking lot updated! ✅', 'success');
+        navigate('admin-dashboard');
+      } catch(e) {
+        showToast(e.response?.data?.error || 'Update failed', 'error');
+      } finally { loading.value = false; }
+    }
+
+    return { form, loading, fetching, navigate, submit };
+  },
+  template: `
+    <div style="max-width:600px;margin:0 auto">
+      <div class="flex-gap mb-4">
+        <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('admin-dashboard')"><i class="bi bi-arrow-left"></i> Back</button>
+        <h2>Edit Parking Lot</h2>
+      </div>
+      <div v-if="fetching" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
