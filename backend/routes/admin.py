@@ -186,3 +186,14 @@ def edit_lot(user, lot_id):
         ).limit(current_count - new_spots).all()
         for spot in to_remove:
             db.session.delete(spot)
+
+    lot.prime_location_name = name
+    lot.address = address
+    lot.pin_code = pin_code
+    lot.price_per_hour = float(price)
+    lot.number_of_spots = new_spots
+    db.session.commit()
+
+    cache_delete('admin:dashboard')
+    cache_delete_pattern('user:lots*')
+    return jsonify({'message': 'Parking lot updated', 'lot': lot.to_dict(include_spots=True)}), 200

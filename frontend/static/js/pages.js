@@ -494,3 +494,19 @@ const AdminEditLot = {
     const form = ref({
       prime_location_name: '', address: '', pin_code: '',
       price_per_hour: '', number_of_spots: ''
+    });
+    const lotId = props.navData?.id;
+
+    onMounted(async () => {
+      if (!lotId) { navigate('admin-dashboard'); return; }
+      try {
+        const res = await api.get(`/admin/lots/${lotId}`);
+        const l = res.data;
+        form.value = {
+          prime_location_name: l.prime_location_name,
+          address: l.address, pin_code: l.pin_code,
+          price_per_hour: l.price_per_hour,
+          number_of_spots: l.number_of_spots
+        };
+      } catch(e) {
+        showToast('Failed to load lot', 'error');
