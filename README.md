@@ -226,3 +226,5 @@ celery -A celery_worker.celery beat   --loglevel=info
 ## 📝 Notes
 
 - The database is created programmatically via `db.create_all()` — no manual DB creation required.
+- Admin is auto-seeded on first run using credentials from `.env`.
+- Redis is optional for development — the app runs without it (caching silently disabled, Celery tasks won't execute).

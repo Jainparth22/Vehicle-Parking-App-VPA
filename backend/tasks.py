@@ -131,3 +131,22 @@ def generate_monthly_report(job_id=None):
     - Generates HTML + PDF, emails admin
     """
     job = None
+    try:
+        if job_id:
+            job = AsyncJob.query.get(job_id)
+            if job:
+                job.status = 'running'
+                db.session.commit()
+
+        now = datetime.datetime.utcnow()
+        month_str = now.strftime('%Y-%m')
+        first_day = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        if now.month == 12:
+            last_day = first_day.replace(year=now.year + 1, month=1)
+        else:
+            last_day = first_day.replace(month=now.month + 1)
+
+        # Get all completed reservations this month
+        monthly_reservations = Reservation.query.filter(
+            Reservation.parking_timestamp >= first_day,
+            Reservation.parking_timestamp < last_day,
