@@ -163,3 +163,18 @@ def generate_monthly_report(job_id=None):
             lot_counts[lot_name] = lot_counts.get(lot_name, 0) + 1
         most_used_lot = max(lot_counts, key=lot_counts.get) if lot_counts else 'N/A'
 
+        # Lot revenue table
+        lot_revenue = {}
+        for res in monthly_reservations:
+            lot_name = res.get_lot_name()
+            lot_revenue[lot_name] = lot_revenue.get(lot_name, 0) + res.parking_cost
+        lot_rows = ''.join([
+            f'<tr><td>{lot}</td><td>{count}</td><td>₹{lot_revenue.get(lot, 0):.2f}</td></tr>'
+            for lot, count in sorted(lot_counts.items(), key=lambda x: x[1], reverse=True)
+        ])
+
+        report_html = f"""
+        <html>
+        <head><title>Monthly Parking Report — {month_str}</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; padding: 20px; color: #1a1a2e; }}
