@@ -233,3 +233,11 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
 }
 .btn-warning-vpa:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(255, 209, 102, 0.4); }
 
+.btn-sm-vpa { padding: 0.35rem 0.8rem; font-size: 0.78rem; }
+
+/* ── Forms ────────────────────────────────────────────────── */
+.form-group { margin-bottom: 1.25rem; }
+
+.form-label {
+  display: block;
+  font-size: 0.82rem;
