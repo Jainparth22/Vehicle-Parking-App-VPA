@@ -552,3 +552,20 @@ const AdminEditLot = {
               <label class="form-label">Price per Hour (₹)</label>
               <input v-model="form.price_per_hour" type="number" step="0.5" min="1" class="form-control" required/>
             </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Number of Spots</label>
+            <input v-model="form.number_of_spots" type="number" min="1" max="1000" class="form-control" required/>
+          </div>
+          <div class="flex-gap mt-3">
+            <button type="submit" class="btn-vpa" :disabled="loading">
+              <span v-if="loading" class="loader-ring" style="width:14px;height:14px;border-width:2px"></span>
+              <span v-else><i class="bi bi-check-lg"></i> Save Changes</span>
+            </button>
+            <button type="button" class="btn-vpa-outline" @click="navigate('admin-dashboard')">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `
+};
