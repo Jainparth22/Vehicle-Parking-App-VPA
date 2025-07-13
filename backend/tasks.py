@@ -150,3 +150,16 @@ def generate_monthly_report(job_id=None):
         monthly_reservations = Reservation.query.filter(
             Reservation.parking_timestamp >= first_day,
             Reservation.parking_timestamp < last_day,
+            Reservation.leaving_timestamp.isnot(None)
+        ).all()
+
+        total_reservations = len(monthly_reservations)
+        total_revenue = sum(r.parking_cost for r in monthly_reservations)
+
+        # Most used lot
+        lot_counts = {}
+        for res in monthly_reservations:
+            lot_name = res.get_lot_name()
+            lot_counts[lot_name] = lot_counts.get(lot_name, 0) + 1
+        most_used_lot = max(lot_counts, key=lot_counts.get) if lot_counts else 'N/A'
+

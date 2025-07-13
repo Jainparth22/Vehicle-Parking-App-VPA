@@ -57,3 +57,21 @@ def validate_price(price):
             return False, 'Price must be greater than 0'
         if val > 10000:
             return False, 'Price seems too high. Max is ₹10,000/hour'
+        return True, None
+    except (ValueError, TypeError):
+        return False, 'Price must be a valid number'
+
+
+def validate_spots(spots):
+    try:
+        val = int(spots)
+        if val <= 0:
+            return False, 'Number of spots must be at least 1'
+        if val > 1000:
+            return False, 'Number of spots cannot exceed 1000'
+        return True, None
+    except (ValueError, TypeError):
+        return False, 'Number of spots must be a valid integer'
+
+
+def validate_vehicle_number(vehicle_number):
