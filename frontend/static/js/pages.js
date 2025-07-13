@@ -569,3 +569,22 @@ const AdminEditLot = {
     </div>
   `
 };
+
+// ── Admin — Users ──────────────────────────────────────────
+const AdminUsers = {
+  setup() {
+    const { ref, onMounted, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const users     = ref([]);
+    const loading   = ref(true);
+
+    onMounted(async () => {
+      try {
+        const res = await api.get('/admin/users');
+        users.value = res.data;
+      } catch(e) {
+        showToast('Failed to load users', 'error');
+      } finally { loading.value = false; }
+    });
+

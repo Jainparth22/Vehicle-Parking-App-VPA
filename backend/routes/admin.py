@@ -227,3 +227,8 @@ def delete_lot(user, lot_id):
 @admin_bp.route('/lots/<int:lot_id>/spots', methods=['GET'])
 @role_required('admin')
 def get_lot_spots(user, lot_id):
+    lot = ParkingLot.query.get_or_404(lot_id)
+    spots = lot.spots.order_by(ParkingSpot.spot_number).all()
+    return jsonify([s.to_dict() for s in spots]), 200
+
+

@@ -178,3 +178,9 @@ def generate_monthly_report(job_id=None):
         <head><title>Monthly Parking Report — {month_str}</title>
         <style>
             body {{ font-family: Arial, sans-serif; padding: 20px; color: #1a1a2e; }}
+            h1 {{ color: #16213e; }} h2 {{ color: #0f3460; }}
+            table {{ border-collapse: collapse; width: 100%; margin-top: 15px; }}
+            th, td {{ border: 1px solid #ddd; padding: 10px; text-align: left; }}
+            th {{ background: #0f3460; color: white; }}
+            .stat {{ font-size: 28px; font-weight: bold; color: #e94560; }}
+            .card {{ background: #f8f9fa; border-radius: 8px; padding: 15px; margin: 10px 0; display: inline-block; width: 28%; }}
