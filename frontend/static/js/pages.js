@@ -533,3 +533,22 @@ const AdminEditLot = {
         <h2>Edit Parking Lot</h2>
       </div>
       <div v-if="fetching" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
+      <div v-else class="glass-card-flat">
+        <form @submit.prevent="submit">
+          <div class="form-group">
+            <label class="form-label">Prime Location Name</label>
+            <input v-model="form.prime_location_name" class="form-control" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <input v-model="form.address" class="form-control" required/>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">PIN Code</label>
+              <input v-model="form.pin_code" class="form-control" maxlength="6" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price per Hour (₹)</label>
+              <input v-model="form.price_per_hour" type="number" step="0.5" min="1" class="form-control" required/>
+            </div>

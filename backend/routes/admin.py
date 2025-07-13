@@ -207,3 +207,23 @@ def delete_lot(user, lot_id):
 
     occupied = lot.spots.filter_by(status='O').count()
     if occupied > 0:
+        return jsonify({'error': f'Cannot delete lot — {occupied} spots are currently occupied'}), 400
+
+    # Nullify spot_id on historical reservations so FK constraint is satisfied
+    # (historical data preserved via lot_name_at_booking, spot_number_at_booking etc.)
+    spot_ids = [s.id for s in lot.spots.all()]
+    if spot_ids:
+        Reservation.query.filter(Reservation.spot_id.in_(spot_ids)).update(
+            {Reservation.spot_id: None}, synchronize_session='fetch'
+        )
+
+    db.session.delete(lot)
+    db.session.commit()
+    cache_delete('admin:dashboard')
+    cache_delete_pattern('user:lots*')
+    return jsonify({'message': f'Parking lot "{lot_name}" deleted successfully'}), 200
+
+
+@admin_bp.route('/lots/<int:lot_id>/spots', methods=['GET'])
+@role_required('admin')
+def get_lot_spots(user, lot_id):

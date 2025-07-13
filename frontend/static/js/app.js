@@ -224,3 +224,5 @@ const VPA = {
     </div>
   `
 };
+
+createApp(VPA).mount('#app');
