@@ -598,3 +598,8 @@ const AdminUsers = {
       </div>
       <div v-if="loading" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
       <div v-else-if="!users.length" class="empty-state glass-card-flat">
+        <div class="empty-icon">👤</div><h3>No users registered yet</h3>
+      </div>
+      <div v-else class="glass-card-flat scroll-x">
+        <table class="vpa-table">
+          <thead>

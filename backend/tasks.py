@@ -184,3 +184,23 @@ def generate_monthly_report(job_id=None):
             th {{ background: #0f3460; color: white; }}
             .stat {{ font-size: 28px; font-weight: bold; color: #e94560; }}
             .card {{ background: #f8f9fa; border-radius: 8px; padding: 15px; margin: 10px 0; display: inline-block; width: 28%; }}
+        </style>
+        </head>
+        <body>
+            <h1>🅿️ Monthly Parking Report — {month_str}</h1>
+            <div>
+                <div class="card"><p>Total Reservations</p><p class="stat">{total_reservations}</p></div>
+                <div class="card"><p>Total Revenue</p><p class="stat">₹{total_revenue:.2f}</p></div>
+                <div class="card"><p>Most Used Lot</p><p class="stat" style="font-size:18px">{most_used_lot}</p></div>
+            </div>
+            <h2>Parking Lot Breakdown</h2>
+            <table>
+                <tr><th>Parking Lot</th><th>Reservations</th><th>Revenue</th></tr>
+                {lot_rows if lot_rows else '<tr><td colspan="3">No data for this month</td></tr>'}
+            </table>
+            <p><em>Report generated on {now.strftime('%Y-%m-%d %H:%M')} UTC</em></p>
+        </body>
+        </html>
+        """
+
+        # Save HTML report

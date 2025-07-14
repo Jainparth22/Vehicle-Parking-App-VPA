@@ -291,3 +291,10 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
 .lot-card-body { padding: 1.25rem; }
 
 .lot-name {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+.lot-address { font-size: 0.82rem; color: var(--text-muted); }
+
