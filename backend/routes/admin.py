@@ -232,3 +232,19 @@ def get_lot_spots(user, lot_id):
     return jsonify([s.to_dict() for s in spots]), 200
 
 
+# ── Reservations (admin view) ─────────────────────────────────────────────────
+
+@admin_bp.route('/reservations', methods=['GET'])
+@role_required('admin')
+def list_reservations(user):
+    status = request.args.get('status', 'all')
+    lot_id = request.args.get('lot_id')
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 50))
+
+    query = Reservation.query
+    if status == 'active':
+        query = query.filter(Reservation.leaving_timestamp.is_(None))
+    elif status == 'completed':
+        query = query.filter(Reservation.leaving_timestamp.isnot(None))
+    if lot_id:

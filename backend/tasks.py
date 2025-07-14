@@ -204,3 +204,15 @@ def generate_monthly_report(job_id=None):
         """
 
         # Save HTML report
+        reports_dir = os.path.join(os.path.dirname(__file__), 'reports')
+        os.makedirs(reports_dir, exist_ok=True)
+        report_path = os.path.join(reports_dir, f'report_{month_str}.html')
+        with open(report_path, 'w', encoding='utf-8') as f:
+            f.write(report_html)
+
+        # Try PDF generation
+        pdf_path = os.path.join(reports_dir, f'report_{month_str}.pdf')
+        try:
+            from xhtml2pdf import pisa
+            with open(pdf_path, 'wb') as pdf_file:
+                pisa.CreatePDF(report_html, dest=pdf_file)
