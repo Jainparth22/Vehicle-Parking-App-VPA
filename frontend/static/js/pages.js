@@ -588,3 +588,13 @@ const AdminUsers = {
       } finally { loading.value = false; }
     });
 
+    return { users, loading, navigate };
+  },
+  template: `
+    <div>
+      <div class="flex-gap mb-4">
+        <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('admin-dashboard')"><i class="bi bi-arrow-left"></i> Back</button>
+        <h2>Registered Users ({{ users.length }})</h2>
+      </div>
+      <div v-if="loading" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
+      <div v-else-if="!users.length" class="empty-state glass-card-flat">

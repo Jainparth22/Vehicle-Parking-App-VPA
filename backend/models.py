@@ -141,3 +141,23 @@ class Reservation(db.Model):
             duration_hours = (datetime.utcnow() - self.parking_timestamp).total_seconds() / 3600
             current_cost = round((self.price_per_hour_at_booking or 0.0) * duration_hours, 2)
         return {
+            'id': self.id,
+            'spot_id': self.spot_id,
+            'user_id': self.user_id,
+            'vehicle_number': self.vehicle_number,
+            'parking_timestamp': self.parking_timestamp.isoformat() if self.parking_timestamp else None,
+            'leaving_timestamp': self.leaving_timestamp.isoformat() if self.leaving_timestamp else None,
+            'parking_cost': self.parking_cost,
+            'current_cost': current_cost,
+            'is_active': self.leaving_timestamp is None,
+            'lot_name': self.get_lot_name(),
+            'lot_address': self.get_lot_address(),
+            'spot_number': self.get_spot_number(),
+            'lot_id': self.lot_id_at_booking,
+            'price_per_hour': self.price_per_hour_at_booking,
+            'user_email': self.user.email if self.user else None,
+            'user_name': self.user.full_name if self.user else None,
+        }
+
+
+class MonthlyReport(db.Model):

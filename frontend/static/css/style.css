@@ -277,3 +277,17 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
   border-radius: var(--radius);
   overflow: hidden;
   transition: all var(--transition);
+  position: relative;
+}
+
+.lot-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: rgba(233,69,96,0.3); }
+
+.lot-card-header {
+  background: linear-gradient(135deg, rgba(233,69,96,0.15), rgba(15,52,96,0.3));
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.lot-card-body { padding: 1.25rem; }
+
+.lot-name {
