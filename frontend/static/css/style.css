@@ -259,3 +259,21 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
   font-family: 'Inter', sans-serif;
   transition: all var(--transition);
   outline: none;
+}
+
+.form-control:focus {
+  border-color: var(--highlight);
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
+}
+
+.form-control::placeholder { color: rgba(154, 154, 176, 0.6); }
+.form-control option { background: var(--primary-mid); }
+
+/* ── Parking Lot Cards ────────────────────────────────────── */
+.lot-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: all var(--transition);
