@@ -75,3 +75,10 @@ def validate_spots(spots):
 
 
 def validate_vehicle_number(vehicle_number):
+    """Basic vehicle number validation"""
+    if not vehicle_number:
+        return True, None  # optional
+    vehicle_number = vehicle_number.strip().upper()
+    if len(vehicle_number) < 4 or len(vehicle_number) > 20:
+        return False, 'Vehicle number must be 4-20 characters'
+    return True, None
