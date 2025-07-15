@@ -248,3 +248,13 @@ def list_reservations(user):
     elif status == 'completed':
         query = query.filter(Reservation.leaving_timestamp.isnot(None))
     if lot_id:
+        query = query.filter_by(lot_id_at_booking=int(lot_id))
+
+    reservations = query.order_by(Reservation.parking_timestamp.desc()).all()
+    return jsonify([r.to_dict() for r in reservations]), 200
+
+
+# ── Search ────────────────────────────────────────────────────────────────────
+
+@admin_bp.route('/search', methods=['GET'])
+@role_required('admin')

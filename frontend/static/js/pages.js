@@ -603,3 +603,12 @@ const AdminUsers = {
       <div v-else class="glass-card-flat scroll-x">
         <table class="vpa-table">
           <thead>
+            <tr><th>#</th><th>Email</th><th>Full Name</th><th>Address</th><th>PIN</th><th>Joined</th><th>Last Login</th></tr>
+          </thead>
+          <tbody>
+            <tr v-for="(u, i) in users" :key="u.id">
+              <td class="text-muted">{{ i+1 }}</td>
+              <td><strong>{{ u.email }}</strong></td>
+              <td>{{ u.full_name || '—' }}</td>
+              <td class="text-muted text-sm">{{ u.address || '—' }}</td>
+              <td class="text-muted">{{ u.pin_code || '—' }}</td>

@@ -161,3 +161,12 @@ class Reservation(db.Model):
 
 
 class MonthlyReport(db.Model):
+    __tablename__ = 'monthly_reports'
+    id = db.Column(db.Integer, primary_key=True)
+    month = db.Column(db.String(20), nullable=False)
+    total_reservations = db.Column(db.Integer, default=0)
+    total_revenue = db.Column(db.Float, default=0.0)
+    report_path = db.Column(db.String(256))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
