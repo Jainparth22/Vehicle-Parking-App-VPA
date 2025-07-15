@@ -170,3 +170,16 @@ class MonthlyReport(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
+        return {
+            'id': self.id,
+            'month': self.month,
+            'total_reservations': self.total_reservations,
+            'total_revenue': self.total_revenue,
+            'report_path': self.report_path,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class Notification(db.Model):
+    __tablename__ = 'notifications'
+    id = db.Column(db.Integer, primary_key=True)

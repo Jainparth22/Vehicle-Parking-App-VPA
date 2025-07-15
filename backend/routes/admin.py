@@ -258,3 +258,15 @@ def list_reservations(user):
 
 @admin_bp.route('/search', methods=['GET'])
 @role_required('admin')
+def search(user):
+    q = request.args.get('q', '').strip()
+    search_type = request.args.get('type', 'all')
+
+    if not q:
+        return jsonify({'error': 'Search query required'}), 400
+
+    results = []
+    if search_type in ('all', 'spot'):
+        spots = ParkingSpot.query.join(ParkingLot).filter(
+            db.or_(
+                ParkingLot.prime_location_name.ilike(f'%{q}%'),
