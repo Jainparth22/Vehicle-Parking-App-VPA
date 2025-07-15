@@ -270,3 +270,18 @@ def search(user):
         spots = ParkingSpot.query.join(ParkingLot).filter(
             db.or_(
                 ParkingLot.prime_location_name.ilike(f'%{q}%'),
+                ParkingLot.pin_code.ilike(f'%{q}%'),
+            )
+        ).all()
+        results.extend([s.to_dict() for s in spots])
+
+    if search_type in ('all', 'user'):
+        users = User.query.filter(
+            db.or_(
+                User.email.ilike(f'%{q}%'),
+                User.full_name.ilike(f'%{q}%'),
+            )
+        ).filter_by(role='user').all()
+        results.extend([{'type': 'user', **u.to_dict()} for u in users])
+
+    return jsonify(results), 200
