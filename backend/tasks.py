@@ -245,3 +245,23 @@ def generate_monthly_report(job_id=None):
                 html_body=report_html
             )
             send_gchat_webhook(
+                f'Monthly Report {month_str}: {total_reservations} reservations, ₹{total_revenue:.2f} revenue. Most used: {most_used_lot}'
+            )
+
+        db.session.commit()
+
+        if job:
+            job.status = 'completed'
+            job.file_path = report_path
+            job.completed_at = datetime.datetime.utcnow()
+            db.session.commit()
+
+        return {'status': 'success', 'report_path': report_path}
+    except Exception as e:
+        db.session.rollback()
+        if job:
+            try:
+                job.status = 'failed'
+                db.session.commit()
+            except Exception:
+                pass

@@ -619,3 +619,20 @@ const AdminUsers = {
         </table>
       </div>
     </div>
+  `
+};
+
+// ── Admin — Search ─────────────────────────────────────────
+const AdminSearch = {
+  setup() {
+    const { ref, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const query     = ref('');
+    const type      = ref('all');
+    const results   = ref([]);
+    const loading   = ref(false);
+    const searched  = ref(false);
+
+    async function doSearch() {
+      if (!query.value.trim()) { showToast('Enter a search query', 'error'); return; }
