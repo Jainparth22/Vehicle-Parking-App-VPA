@@ -636,3 +636,18 @@ const AdminSearch = {
 
     async function doSearch() {
       if (!query.value.trim()) { showToast('Enter a search query', 'error'); return; }
+      loading.value = true; searched.value = true;
+      try {
+        const res = await api.get('/admin/search', { params: { q: query.value, type: type.value } });
+        results.value = res.data;
+      } catch(e) {
+        showToast('Search failed', 'error');
+      } finally { loading.value = false; }
+    }
+
+    return { query, type, results, loading, searched, doSearch, navigate };
+  },
+  template: `
+    <div>
+      <div class="flex-gap mb-4">
+        <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('admin-dashboard')"><i class="bi bi-arrow-left"></i> Back</button>
