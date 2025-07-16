@@ -216,3 +216,20 @@ def generate_monthly_report(job_id=None):
             from xhtml2pdf import pisa
             with open(pdf_path, 'wb') as pdf_file:
                 pisa.CreatePDF(report_html, dest=pdf_file)
+        except Exception as pdf_err:
+            print(f'PDF generation failed: {pdf_err}')
+            pdf_path = None
+
+        # Save report record
+        report = MonthlyReport(
+            month=month_str,
+            total_reservations=total_reservations,
+            total_revenue=total_revenue,
+            report_path=report_path,
+        )
+        db.session.add(report)
+
+        # Notify admin + send email
+        admin = User.query.filter_by(role='admin').first()
+        if admin:
+            notification = Notification(
