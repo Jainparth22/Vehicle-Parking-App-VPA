@@ -298,3 +298,12 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
 
 .lot-address { font-size: 0.82rem; color: var(--text-muted); }
 
+/* ── Spot Grid ────────────────────────────────────────────── */
+.spots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 4px;
+  margin-top: 0.75rem;
+}
+
+.spot-cell {

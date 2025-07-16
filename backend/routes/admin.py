@@ -285,3 +285,19 @@ def search(user):
         results.extend([{'type': 'user', **u.to_dict()} for u in users])
 
     return jsonify(results), 200
+
+
+# ── Analytics ─────────────────────────────────────────────────────────────────
+
+@admin_bp.route('/analytics', methods=['GET'])
+@role_required('admin')
+def analytics(user):
+    """Detailed analytics for charts"""
+    all_lots = ParkingLot.query.all()
+    all_reservations = Reservation.query.all()
+
+    # Revenue per lot (bar chart)
+    lot_data = {}
+    for lot in all_lots:
+        rev = db.session.query(db.func.sum(Reservation.parking_cost)).filter(
+            Reservation.lot_id_at_booking == lot.id,

@@ -612,3 +612,10 @@ const AdminUsers = {
               <td>{{ u.full_name || '—' }}</td>
               <td class="text-muted text-sm">{{ u.address || '—' }}</td>
               <td class="text-muted">{{ u.pin_code || '—' }}</td>
+              <td class="text-sm text-muted">{{ u.created_at ? new Date(u.created_at).toLocaleDateString('en-IN') : '—' }}</td>
+              <td class="text-sm text-muted">{{ u.last_login ? new Date(u.last_login).toLocaleDateString('en-IN') : 'Never' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
