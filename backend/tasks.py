@@ -233,3 +233,15 @@ def generate_monthly_report(job_id=None):
         admin = User.query.filter_by(role='admin').first()
         if admin:
             notification = Notification(
+                user_id=admin.id,
+                message=f'Monthly parking report for {month_str} is ready. Reservations: {total_reservations}, Revenue: ₹{total_revenue:.2f}',
+                channel='email',
+                is_sent=True,
+            )
+            db.session.add(notification)
+            send_email(
+                subject=f'🅿️ Parking App — Monthly Report {month_str}',
+                recipients=[admin.email],
+                html_body=report_html
+            )
+            send_gchat_webhook(

@@ -301,3 +301,20 @@ def analytics(user):
     for lot in all_lots:
         rev = db.session.query(db.func.sum(Reservation.parking_cost)).filter(
             Reservation.lot_id_at_booking == lot.id,
+            Reservation.leaving_timestamp.isnot(None)
+        ).scalar() or 0
+        bookings = Reservation.query.filter_by(lot_id_at_booking=lot.id).count()
+        lot_data[lot.prime_location_name] = {
+            'revenue': round(float(rev), 2),
+            'bookings': bookings,
+            'available': lot.spots.filter_by(status='A').count(),
+            'occupied': lot.spots.filter_by(status='O').count(),
+        }
+
+    # Reservations over last 7 days (line chart)
+    daily_counts = []
+    for i in range(6, -1, -1):
+        day = datetime.utcnow().date() - timedelta(days=i)
+        count = Reservation.query.filter(
+            db.func.date(Reservation.parking_timestamp) == day
+        ).count()
