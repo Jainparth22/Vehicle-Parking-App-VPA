@@ -265,3 +265,9 @@ def generate_monthly_report(job_id=None):
                 db.session.commit()
             except Exception:
                 pass
+        return {'status': 'error', 'message': str(e)}
+
+
+@celery.task(name='tasks.export_parking_csv')
+def export_parking_csv(user_id, job_id):
+    """

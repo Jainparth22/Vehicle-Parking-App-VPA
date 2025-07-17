@@ -320,3 +320,16 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
   border: 1.5px solid transparent;
 }
 
+.spot-cell.available {
+  background: rgba(6, 214, 160, 0.15);
+  border-color: rgba(6, 214, 160, 0.3);
+  color: var(--success);
+}
+
+.spot-cell.occupied {
+  background: rgba(233, 69, 96, 0.15);
+  border-color: rgba(233, 69, 96, 0.3);
+  color: var(--highlight);
+  cursor: default;
+}
+
