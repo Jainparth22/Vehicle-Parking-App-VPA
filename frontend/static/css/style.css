@@ -333,3 +333,19 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
   cursor: default;
 }
 
+.spot-cell.occupied.clickable { cursor: pointer; }
+
+.spot-cell.available:hover {
+  background: rgba(6, 214, 160, 0.3);
+  transform: scale(1.1);
+}
+
+/* ── Badges ───────────────────────────────────────────────── */
+.badge-vpa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.74rem;
+  font-weight: 600;
