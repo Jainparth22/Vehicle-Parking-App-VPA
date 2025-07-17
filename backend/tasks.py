@@ -285,3 +285,18 @@ def export_parking_csv(user_id, job_id):
 
         reservations = Reservation.query.filter_by(user_id=user_id).order_by(
             Reservation.parking_timestamp.desc()
+        ).all()
+
+        exports_dir = os.path.join(os.path.dirname(__file__), 'exports')
+        os.makedirs(exports_dir, exist_ok=True)
+        timestamp = datetime.datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+        file_path = os.path.join(exports_dir, f'parking_history_{user_id}_{timestamp}.csv')
+
+        with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow([
+                'Reservation ID', 'Spot Number', 'Lot Name', 'Lot Address',
+                'Vehicle Number', 'Parking Time', 'Leaving Time',
+                'Duration (hrs)', 'Cost (₹)', 'Status'
+            ])
+            for res in reservations:
