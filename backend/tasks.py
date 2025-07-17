@@ -319,3 +319,13 @@ def export_parking_csv(user_id, job_id):
                 ])
 
         if job:
+            job.status = 'completed'
+            job.file_path = file_path
+            job.completed_at = datetime.datetime.utcnow()
+            db.session.commit()
+
+        # In-app notification
+        notification = Notification(
+            user_id=user_id,
+            message='Your parking history CSV export is ready for download.',
+            channel='in-app',
