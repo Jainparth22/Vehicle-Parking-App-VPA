@@ -300,3 +300,22 @@ def export_parking_csv(user_id, job_id):
                 'Duration (hrs)', 'Cost (₹)', 'Status'
             ])
             for res in reservations:
+                duration = ''
+                if res.parking_timestamp and res.leaving_timestamp:
+                    duration = round(
+                        (res.leaving_timestamp - res.parking_timestamp).total_seconds() / 3600, 2
+                    )
+                writer.writerow([
+                    res.id,
+                    res.get_spot_number(),
+                    res.get_lot_name(),
+                    res.get_lot_address(),
+                    res.vehicle_number or '',
+                    res.parking_timestamp.strftime('%Y-%m-%d %H:%M') if res.parking_timestamp else '',
+                    res.leaving_timestamp.strftime('%Y-%m-%d %H:%M') if res.leaving_timestamp else 'Active',
+                    duration,
+                    res.parking_cost,
+                    'Completed' if res.leaving_timestamp else 'Active'
+                ])
+
+        if job:

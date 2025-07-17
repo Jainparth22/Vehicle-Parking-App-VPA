@@ -325,3 +325,20 @@ def analytics(user):
         {
             'name': lot.prime_location_name,
             'occupied': lot.spots.filter_by(status='O').count(),
+            'available': lot.spots.filter_by(status='A').count(),
+        }
+        for lot in all_lots
+    ]
+
+    return jsonify({
+        'lot_data': lot_data,
+        'daily_counts': daily_counts,
+        'occupancy': occupancy,
+    }), 200
+
+
+# ── Reports ───────────────────────────────────────────────────────────────────
+
+@admin_bp.route('/reports', methods=['GET'])
+@role_required('admin')
+def list_reports(user):
