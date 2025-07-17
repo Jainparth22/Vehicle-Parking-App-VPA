@@ -271,3 +271,17 @@ def generate_monthly_report(job_id=None):
 @celery.task(name='tasks.export_parking_csv')
 def export_parking_csv(user_id, job_id):
     """
+    User-triggered async CSV export:
+    - Exports all reservation history for the user
+    - Columns: reservation_id, spot_id, lot_name, address, vehicle_number,
+               parking_timestamp, leaving_timestamp, cost, remarks
+    """
+    job = None
+    try:
+        job = AsyncJob.query.get(job_id)
+        if job:
+            job.status = 'running'
+            db.session.commit()
+
+        reservations = Reservation.query.filter_by(user_id=user_id).order_by(
+            Reservation.parking_timestamp.desc()

@@ -318,3 +318,10 @@ def analytics(user):
         count = Reservation.query.filter(
             db.func.date(Reservation.parking_timestamp) == day
         ).count()
+        daily_counts.append({'date': day.strftime('%d %b'), 'count': count})
+
+    # Occupancy per lot
+    occupancy = [
+        {
+            'name': lot.prime_location_name,
+            'occupied': lot.spots.filter_by(status='O').count(),
