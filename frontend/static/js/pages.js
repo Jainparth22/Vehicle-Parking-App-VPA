@@ -658,3 +658,11 @@ const AdminSearch = {
           <div class="form-group">
             <label class="form-label">Search by</label>
             <select v-model="type" class="form-control">
+              <option value="all">All</option>
+              <option value="spot">Spot/Lot</option>
+              <option value="user">User</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Search Query</label>
+            <input v-model="query" class="form-control" placeholder="Location name, PIN code, email…" @keyup.enter="doSearch"/>

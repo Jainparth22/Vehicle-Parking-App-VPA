@@ -355,3 +355,14 @@ def trigger_report(user):
     db.session.add(job)
     db.session.commit()
     generate_monthly_report.delay(job_id=job.id)
+    return jsonify({'message': 'Monthly report generation started', 'job_id': job.id}), 202
+
+
+@admin_bp.route('/reports/download/<int:report_id>', methods=['GET'])
+@role_required('admin')
+def download_report(user, report_id):
+    import os
+    report = MonthlyReport.query.get_or_404(report_id)
+    if not report.report_path or not os.path.exists(report.report_path):
+        return jsonify({'error': 'Report file not found'}), 404
+    return send_file(report.report_path, as_attachment=True)
