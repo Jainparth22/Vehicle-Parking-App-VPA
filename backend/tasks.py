@@ -329,3 +329,14 @@ def export_parking_csv(user_id, job_id):
             user_id=user_id,
             message='Your parking history CSV export is ready for download.',
             channel='in-app',
+            is_sent=True,
+        )
+        db.session.add(notification)
+        db.session.commit()
+
+        return {'status': 'success', 'file_path': file_path}
+    except Exception as e:
+        if job:
+            job.status = 'failed'
+            db.session.commit()
+        return {'status': 'error', 'message': str(e)}

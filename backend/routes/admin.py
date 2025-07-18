@@ -342,3 +342,16 @@ def analytics(user):
 @admin_bp.route('/reports', methods=['GET'])
 @role_required('admin')
 def list_reports(user):
+    reports = MonthlyReport.query.order_by(MonthlyReport.created_at.desc()).all()
+    return jsonify([r.to_dict() for r in reports]), 200
+
+
+@admin_bp.route('/reports/generate', methods=['POST'])
+@role_required('admin')
+def trigger_report(user):
+    from tasks import generate_monthly_report
+    from models import AsyncJob
+    job = AsyncJob(user_id=user.id, job_type='monthly_report', status='pending')
+    db.session.add(job)
+    db.session.commit()
+    generate_monthly_report.delay(job_id=job.id)
