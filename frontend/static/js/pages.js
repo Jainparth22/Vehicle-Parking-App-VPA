@@ -678,3 +678,19 @@ const AdminSearch = {
       </div>
       <div v-if="results.length" class="glass-card-flat scroll-x">
         <p class="text-sm text-muted mb-2">{{ results.length }} result(s)</p>
+        <table class="vpa-table">
+          <thead><tr><th>Type</th><th>Details</th><th>Status/Info</th></tr></thead>
+          <tbody>
+            <tr v-for="r in results" :key="r.id">
+              <td><span class="badge-vpa" :class="r.type==='user'?'badge-active':'badge-available'">{{ r.type || 'spot' }}</span></td>
+              <td>
+                <div v-if="r.type==='user'"><strong>{{ r.email }}</strong><br><span class="text-muted text-xs">{{ r.full_name }}</span></div>
+                <div v-else><strong>Spot #{{ r.spot_number }}</strong><br><span class="text-muted text-xs">Lot: {{ r.lot_id }}</span></div>
+              </td>
+              <td>
+                <span v-if="r.type==='user'" class="text-muted text-sm">{{ r.address || '—' }}, {{ r.pin_code || '—' }}</span>
+                <span v-else class="badge-vpa" :class="r.status==='A'?'badge-available':'badge-occupied'">{{ r.status==='A'?'Available':'Occupied' }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>

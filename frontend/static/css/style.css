@@ -385,3 +385,15 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
   padding: 2rem;
 }
 
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(26, 26, 46, 0.8);
+  backdrop-filter: blur(30px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: var(--shadow);
+}
+
+.auth-logo {
