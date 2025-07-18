@@ -707,3 +707,8 @@ const AdminAnalytics = {
     const showToast = inject('showToast');
     const data      = ref(null);
     const loading   = ref(true);
+
+    async function load() {
+      try {
+        const res = await api.get('/admin/analytics');
+        data.value = res.data;
