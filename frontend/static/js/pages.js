@@ -666,3 +666,15 @@ const AdminSearch = {
           <div class="form-group">
             <label class="form-label">Search Query</label>
             <input v-model="query" class="form-control" placeholder="Location name, PIN code, email…" @keyup.enter="doSearch"/>
+          </div>
+        </div>
+        <button class="btn-vpa" @click="doSearch" :disabled="loading">
+          <span v-if="loading" class="loader-ring" style="width:14px;height:14px;border-width:2px"></span>
+          <span v-else><i class="bi bi-search"></i> Search</span>
+        </button>
+      </div>
+      <div v-if="searched && !results.length" class="empty-state glass-card-flat">
+        <div class="empty-icon">🔍</div><h3>No results found</h3>
+      </div>
+      <div v-if="results.length" class="glass-card-flat scroll-x">
+        <p class="text-sm text-muted mb-2">{{ results.length }} result(s)</p>

@@ -376,3 +376,12 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
 .vpa-table tr:hover td { background: rgba(255,255,255,0.03); }
 .vpa-table tr:last-child td { border-bottom: none; }
 
+/* ── Auth Page ────────────────────────────────────────────── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
