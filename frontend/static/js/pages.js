@@ -651,3 +651,10 @@ const AdminSearch = {
     <div>
       <div class="flex-gap mb-4">
         <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('admin-dashboard')"><i class="bi bi-arrow-left"></i> Back</button>
+        <h2>Search</h2>
+      </div>
+      <div class="glass-card-flat mb-4">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Search by</label>
+            <select v-model="type" class="form-control">
