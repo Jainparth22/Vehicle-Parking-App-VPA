@@ -694,3 +694,16 @@ const AdminSearch = {
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  `
+};
+
+// ── Admin — Analytics & Charts ─────────────────────────────
+const AdminAnalytics = {
+  setup() {
+    const { ref, onMounted, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const data      = ref(null);
+    const loading   = ref(true);
