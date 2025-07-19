@@ -717,3 +717,15 @@ const AdminAnalytics = {
       } finally { loading.value = false; }
     }
 
+    onMounted(load);
+
+    return { data, loading, navigate };
+  },
+  mounted() {
+    this.unwatchData = this.$watch('data', (val) => {
+      if (val) this.$nextTick(() => this.renderCharts());
+    });
+  },
+  beforeUnmount() {
+    this._charts?.forEach(c => c.destroy());
+  },
