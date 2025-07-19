@@ -458,3 +458,22 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
 .modal-box {
   background: linear-gradient(145deg, var(--primary-mid), var(--accent));
   border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: var(--shadow);
+  animation: slideUp 0.25s ease;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.modal-close {
+  background: rgba(255,255,255,0.07);
+  border: none;
+  color: var(--text-muted);

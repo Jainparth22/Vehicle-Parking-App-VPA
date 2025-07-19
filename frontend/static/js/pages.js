@@ -729,3 +729,8 @@ const AdminAnalytics = {
   beforeUnmount() {
     this._charts?.forEach(c => c.destroy());
   },
+  methods: {
+    renderCharts() {
+      this._charts = this._charts || [];
+      this._charts.forEach(c => c.destroy());
+      this._charts = [];
