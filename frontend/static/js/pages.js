@@ -712,3 +712,8 @@ const AdminAnalytics = {
       try {
         const res = await api.get('/admin/analytics');
         data.value = res.data;
+      } catch(e) {
+        showToast('Failed to load analytics', 'error');
+      } finally { loading.value = false; }
+    }
+
