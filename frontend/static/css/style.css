@@ -486,3 +486,12 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
 }
 
 .modal-close:hover { background: rgba(255,255,255,0.15); color: var(--text); }
+
+/* ── Alert / Toast ────────────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;

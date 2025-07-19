@@ -734,3 +734,15 @@ const AdminAnalytics = {
       this._charts = this._charts || [];
       this._charts.forEach(c => c.destroy());
       this._charts = [];
+
+      const d = this.data;
+      const names  = Object.keys(d.lot_data);
+      const revs   = names.map(n => d.lot_data[n].revenue);
+      const books  = names.map(n => d.lot_data[n].bookings);
+      const avail  = names.map(n => d.lot_data[n].available);
+      const occ    = names.map(n => d.lot_data[n].occupied);
+      const days   = d.daily_counts.map(x => x.date);
+      const counts = d.daily_counts.map(x => x.count);
+
+      const opts = {
+        responsive: true, maintainAspectRatio: false,
