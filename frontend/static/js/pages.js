@@ -746,3 +746,13 @@ const AdminAnalytics = {
 
       const opts = {
         responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#eaeaea', font: { family: 'Inter', size: 11 } } } },
+        scales: { x: { ticks: { color: '#9a9ab0' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                  y: { ticks: { color: '#9a9ab0' }, grid: { color: 'rgba(255,255,255,0.05)' } } }
+      };
+
+      if (this.$refs.revenueChart) {
+        this._charts.push(new Chart(this.$refs.revenueChart, {
+          type: 'bar', data: {
+            labels: names,
+            datasets: [{ label: 'Revenue (₹)', data: revs, backgroundColor: 'rgba(233,69,96,0.7)', borderColor: 'var(--highlight)', borderWidth: 1, borderRadius: 6 }]

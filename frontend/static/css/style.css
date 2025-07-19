@@ -495,3 +495,10 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
   z-index: 99999;
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast-item {
+  background: var(--primary-mid);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
