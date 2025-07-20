@@ -1020,3 +1020,129 @@ const UserBrowseLots = {
         <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('user-dashboard')"><i class="bi bi-arrow-left"></i> Back</button>
         <h2>Find Parking</h2>
       </div>
+      <div class="glass-card-flat mb-4">
+        <div class="flex-gap">
+          <input v-model="query" class="form-control" placeholder="Search by location name, address, or PIN code…" @keyup.enter="search" style="flex:1"/>
+          <button class="btn-vpa" @click="search" :disabled="searching">
+            <span v-if="searching" class="loader-ring" style="width:14px;height:14px;border-width:2px"></span>
+            <span v-else><i class="bi bi-search"></i> Search</span>
+          </button>
+          <button v-if="query" class="btn-vpa-outline" @click="clearSearch">Clear</button>
+        </div>
+      </div>
+      <div v-if="loading" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
+      <div v-else-if="!lots.length" class="empty-state glass-card-flat">
+        <div class="empty-icon">🔍</div><h3>No parking lots found</h3>
+        <p>Try a different location or PIN code</p>
+      </div>
+      <div v-else>
+        <p class="text-sm text-muted mb-3">{{ lots.length }} lot(s) found</p>
+        <div class="grid-lots">
+          <div v-for="lot in lots" :key="lot.id" class="lot-card">
+            <div class="lot-card-header">
+              <div class="flex-between">
+                <div>
+                  <div class="lot-name">{{ lot.prime_location_name }}</div>
+                  <div class="lot-address"><i class="bi bi-geo-alt"></i> {{ lot.address }}</div>
+                </div>
+                <span class="price-tag">₹{{ lot.price_per_hour }}/hr</span>
+              </div>
+            </div>
+            <div class="lot-card-body">
+              <div class="flex-between mb-2">
+                <span class="badge-vpa badge-available"><i class="bi bi-check-circle"></i> {{ lot.available_spots }} free</span>
+                <span class="badge-vpa badge-occupied">{{ lot.occupied_spots }} taken</span>
+                <span class="text-xs text-muted">PIN: {{ lot.pin_code }}</span>
+              </div>
+              <div style="background:rgba(255,255,255,0.05);border-radius:4px;height:4px;margin-bottom:0.75rem">
+                <div :style="{width:(lot.available_spots/lot.number_of_spots*100)+'%',background:'linear-gradient(90deg,var(--success),#04a87a)',height:'100%',borderRadius:'4px'}"></div>
+              </div>
+              <button v-if="lot.available_spots > 0" class="btn-vpa btn-sm-vpa w-100" style="justify-content:center" @click="navigate('user-reserve', {lot_id: lot.id})">
+                <i class="bi bi-bookmark-plus"></i> Book a Spot
+              </button>
+              <p v-else class="text-center text-danger text-sm">No spots available</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+};
+
+// ── User — Reserve Confirmation ────────────────────────────
+const UserReserve = {
+  props: ['navData'],
+  setup(props) {
+    const { ref, onMounted, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const lot       = ref(null);
+    const loading   = ref(true);
+    const booking   = ref(false);
+    const form      = ref({ vehicle_number: '' });
+    const lotId     = props.navData?.lot_id;
+
+    onMounted(async () => {
+      if (!lotId) { navigate('user-browse-lots'); return; }
+      try {
+        const res = await api.get(`/user/lots/${lotId}`);
+        lot.value = res.data;
+      } catch(e) {
+        showToast('Failed to load lot details', 'error');
+      } finally { loading.value = false; }
+    });
+
+    async function reserve() {
+      booking.value = true;
+      try {
+        const res = await api.post(`/user/reserve/${lotId}`, form.value);
+        showToast(res.data.message, 'success');
+        navigate('user-dashboard');
+      } catch(e) {
+        showToast(e.response?.data?.error || 'Booking failed', 'error');
+      } finally { booking.value = false; }
+    }
+
+    return { lot, loading, booking, form, navigate, reserve };
+  },
+  template: `
+    <div style="max-width:500px;margin:0 auto">
+      <div class="flex-gap mb-4">
+        <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('user-browse-lots')"><i class="bi bi-arrow-left"></i> Back</button>
+        <h2>Book Parking Spot</h2>
+      </div>
+      <div v-if="loading" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
+      <template v-else-if="lot">
+        <div class="glass-card-flat mb-3" style="background:rgba(6,214,160,0.07);border-color:rgba(6,214,160,0.2)">
+          <h3 class="mb-1" style="color:var(--success)">{{ lot.prime_location_name }}</h3>
+          <p class="text-muted text-sm"><i class="bi bi-geo-alt"></i> {{ lot.address }}</p>
+          <div class="flex-gap mt-2">
+            <span class="price-tag">₹{{ lot.price_per_hour }}/hr</span>
+            <span class="badge-vpa badge-available"><i class="bi bi-check-circle"></i> {{ lot.available_spots }} spots available</span>
+          </div>
+        </div>
+        <div class="glass-card-flat">
+          <h3 class="mb-3">Booking Details</h3>
+          <div class="form-group">
+            <label class="form-label">Spot ID (Auto-assigned)</label>
+            <input class="form-control" value="Auto — first available spot" disabled style="opacity:0.5"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lot</label>
+            <input class="form-control" :value="lot.prime_location_name" disabled style="opacity:0.5"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Vehicle Number (Optional)</label>
+            <input v-model="form.vehicle_number" class="form-control" placeholder="e.g. MH 12 AB 1234" maxlength="20" style="text-transform:uppercase"/>
+          </div>
+          <p class="text-xs text-muted mb-3">Parking timestamp will be recorded when you confirm</p>
+          <div class="flex-gap">
+            <button class="btn-success" @click="reserve" :disabled="booking">
+              <span v-if="booking" class="loader-ring" style="width:14px;height:14px;border-width:2px"></span>
+              <span v-else><i class="bi bi-bookmark-check"></i> Reserve Now</span>
+            </button>
+            <button class="btn-vpa-outline" @click="navigate('user-browse-lots')">Cancel</button>
+          </div>
+        </div>
+      </template>
+    </div>
