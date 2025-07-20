@@ -756,3 +756,92 @@ const AdminAnalytics = {
           type: 'bar', data: {
             labels: names,
             datasets: [{ label: 'Revenue (₹)', data: revs, backgroundColor: 'rgba(233,69,96,0.7)', borderColor: 'var(--highlight)', borderWidth: 1, borderRadius: 6 }]
+          }, options: { ...opts }
+        }));
+      }
+      if (this.$refs.dailyChart) {
+        this._charts.push(new Chart(this.$refs.dailyChart, {
+          type: 'line', data: {
+            labels: days,
+            datasets: [{ label: 'Daily Bookings', data: counts, borderColor: 'var(--success)', backgroundColor: 'rgba(6,214,160,0.15)', fill: true, tension: 0.4, pointBackgroundColor: 'var(--success)' }]
+          }, options: { ...opts }
+        }));
+      }
+      if (this.$refs.occupancyChart) {
+        this._charts.push(new Chart(this.$refs.occupancyChart, {
+          type: 'bar', data: {
+            labels: names,
+            datasets: [
+              { label: 'Available', data: avail, backgroundColor: 'rgba(6,214,160,0.7)', borderRadius: 6 },
+              { label: 'Occupied',  data: occ,   backgroundColor: 'rgba(233,69,96,0.7)',  borderRadius: 6 }
+            ]
+          }, options: { ...opts, scales: { ...opts.scales, x: { ...opts.scales.x, stacked: true }, y: { ...opts.scales.y, stacked: true } } }
+        }));
+      }
+    }
+  },
+  template: `
+    <div>
+      <div class="flex-gap mb-4">
+        <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('admin-dashboard')"><i class="bi bi-arrow-left"></i> Back</button>
+        <h2>Analytics & Charts</h2>
+      </div>
+      <div v-if="loading" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
+      <div v-else-if="data">
+        <div class="grid-2 mb-4">
+          <div class="glass-card-flat">
+            <h3 class="mb-3">Revenue per Parking Lot</h3>
+            <div class="chart-wrapper"><canvas ref="revenueChart"></canvas></div>
+          </div>
+          <div class="glass-card-flat">
+            <h3 class="mb-3">Daily Bookings (Last 7 Days)</h3>
+            <div class="chart-wrapper"><canvas ref="dailyChart"></canvas></div>
+          </div>
+        </div>
+        <div class="glass-card-flat">
+          <h3 class="mb-3">Occupancy by Lot</h3>
+          <div class="chart-wrapper" style="height:320px"><canvas ref="occupancyChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+  `
+};
+
+// ── User Dashboard ─────────────────────────────────────────
+const UserDashboard = {
+  setup() {
+    const { ref, onMounted, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const currentUser = inject('currentUser');
+    const data      = ref(null);
+    const loading   = ref(true);
+    const releasing = ref(null);
+
+    async function load() {
+      try {
+        const res = await api.get('/user/dashboard');
+        data.value = res.data;
+      } catch(e) {
+        showToast('Failed to load dashboard', 'error');
+      } finally { loading.value = false; }
+    }
+
+    async function confirmRelease(res_id) {
+      navigate('user-release', { reservation_id: res_id });
+    }
+
+    onMounted(load);
+    return { data, loading, releasing, navigate, confirmRelease, currentUser };
+  },
+  template: `
+    <div>
+      <div class="flex-between mb-4">
+        <div>
+          <h1 style="margin-bottom:0.2rem">My Dashboard</h1>
+          <p class="text-muted text-sm">Welcome, {{ data?.user?.full_name || data?.user?.email }} 👋</p>
+        </div>
+        <div class="flex-gap flex-wrap">
+          <button class="btn-vpa" @click="navigate('user-browse-lots')">
+            <i class="bi bi-search"></i> Find Parking
+          </button>
