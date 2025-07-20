@@ -845,3 +845,57 @@ const UserDashboard = {
           <button class="btn-vpa" @click="navigate('user-browse-lots')">
             <i class="bi bi-search"></i> Find Parking
           </button>
+          <button class="btn-vpa-outline" @click="navigate('user-analytics')">
+            <i class="bi bi-bar-chart"></i> My Stats
+          </button>
+        </div>
+      </div>
+
+      <div v-if="loading" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
+
+      <template v-else-if="data">
+        <!-- Stats -->
+        <div class="grid-4 mb-4">
+          <div class="stat-card accent-blue">
+            <p class="stat-label">Total Bookings</p>
+            <p class="stat-number">{{ data.total_reservations }}</p>
+            <i class="bi bi-calendar-check stat-icon"></i>
+          </div>
+          <div class="stat-card accent-yellow">
+            <p class="stat-label">Active Now</p>
+            <p class="stat-number" style="color:var(--warning)">{{ data.total_active }}</p>
+            <i class="bi bi-car-front stat-icon"></i>
+          </div>
+          <div class="stat-card accent-red">
+            <p class="stat-label">Total Spent</p>
+            <p class="stat-number" style="color:var(--highlight)">₹{{ data.total_spent.toFixed(0) }}</p>
+            <i class="bi bi-currency-rupee stat-icon"></i>
+          </div>
+          <div class="stat-card accent-green">
+            <p class="stat-label">Lots Available</p>
+            <p class="stat-number" style="color:var(--success)">{{ data.available_lots.length }}</p>
+            <i class="bi bi-building stat-icon"></i>
+          </div>
+        </div>
+
+        <!-- Active Reservations -->
+        <div class="glass-card-flat mb-4" v-if="data.active_reservations.length">
+          <h3 class="mb-3">🚗 Active Reservations</h3>
+          <div style="display:grid;gap:1rem">
+            <div v-for="r in data.active_reservations" :key="r.id"
+              style="background:rgba(255,209,102,0.07);border:1px solid rgba(255,209,102,0.2);border-radius:10px;padding:1rem">
+              <div class="flex-between flex-wrap" style="gap:0.75rem">
+                <div>
+                  <p class="fw-bold">{{ r.lot_name }}</p>
+                  <p class="text-sm text-muted"><i class="bi bi-geo-alt"></i> {{ r.lot_address }}</p>
+                  <p class="text-sm mt-1">Spot <strong>#{{ r.spot_number }}</strong>
+                    <span v-if="r.vehicle_number"> · 🚘 {{ r.vehicle_number }}</span>
+                  </p>
+                  <p class="text-xs text-muted mt-1">Parked: {{ new Date(r.parking_timestamp).toLocaleString('en-IN') }}</p>
+                </div>
+                <div style="text-align:right">
+                  <p class="text-warning fw-bold" style="font-size:1.4rem">₹{{ r.current_cost.toFixed(2) }}</p>
+                  <p class="text-xs text-muted">running cost</p>
+                  <button class="btn-vpa mt-2" @click="confirmRelease(r.id)">
+                    <i class="bi bi-sign-stop"></i> Release Spot
+                  </button>
