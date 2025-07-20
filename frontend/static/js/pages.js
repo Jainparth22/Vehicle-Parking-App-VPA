@@ -970,3 +970,53 @@ const UserDashboard = {
     calcDuration(start, end) {
       if (!start || !end) return '—';
       const hrs = (new Date(end) - new Date(start)) / 3600000;
+      if (hrs < 1) return `${Math.round(hrs*60)} min`;
+      return `${hrs.toFixed(1)} hr`;
+    }
+  }
+};
+
+// ── User — Browse Lots ─────────────────────────────────────
+const UserBrowseLots = {
+  setup() {
+    const { ref, onMounted, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const query     = ref('');
+    const lots      = ref([]);
+    const allLots   = ref([]);
+    const loading   = ref(true);
+    const searching = ref(false);
+
+    async function loadAll() {
+      try {
+        const res = await api.get('/user/lots');
+        allLots.value = res.data;
+        lots.value = res.data;
+      } catch(e) {
+        showToast('Failed to load lots', 'error');
+      } finally { loading.value = false; }
+    }
+
+    async function search() {
+      if (!query.value.trim()) { lots.value = allLots.value; return; }
+      searching.value = true;
+      try {
+        const res = await api.get('/user/lots/search', { params: { q: query.value } });
+        lots.value = res.data;
+      } catch(e) {
+        showToast('Search failed', 'error');
+      } finally { searching.value = false; }
+    }
+
+    function clearSearch() { query.value = ''; lots.value = allLots.value; }
+
+    onMounted(loadAll);
+    return { query, lots, loading, searching, navigate, search, clearSearch };
+  },
+  template: `
+    <div>
+      <div class="flex-gap mb-4">
+        <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('user-dashboard')"><i class="bi bi-arrow-left"></i> Back</button>
+        <h2>Find Parking</h2>
+      </div>
