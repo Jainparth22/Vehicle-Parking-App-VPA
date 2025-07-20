@@ -899,3 +899,74 @@ const UserDashboard = {
                   <button class="btn-vpa mt-2" @click="confirmRelease(r.id)">
                     <i class="bi bi-sign-stop"></i> Release Spot
                   </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent History -->
+        <div class="glass-card-flat mb-4">
+          <div class="flex-between mb-3">
+            <h3>Recent Parking History</h3>
+            <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('user-history')">View All</button>
+          </div>
+          <div v-if="!data.recent_completed.length" class="empty-state" style="padding:1.5rem">
+            <p class="text-muted text-sm">No completed reservations yet</p>
+          </div>
+          <div class="scroll-x" v-else>
+            <table class="vpa-table">
+              <thead><tr><th>ID</th><th>Lot</th><th>Spot</th><th>Vehicle</th><th>Duration</th><th>Cost</th></tr></thead>
+              <tbody>
+                <tr v-for="r in data.recent_completed" :key="r.id">
+                  <td class="text-muted">#{{ r.id }}</td>
+                  <td><strong>{{ r.lot_name }}</strong></td>
+                  <td>#{{ r.spot_number }}</td>
+                  <td>{{ r.vehicle_number || '—' }}</td>
+                  <td class="text-sm text-muted">{{ calcDuration(r.parking_timestamp, r.leaving_timestamp) }}</td>
+                  <td class="fw-bold text-success">₹{{ r.parking_cost.toFixed(2) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Available Lots Quick View -->
+        <div>
+          <div class="flex-between mb-3">
+            <h3>Available Parking Lots Nearby</h3>
+            <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('user-browse-lots')">Browse All</button>
+          </div>
+          <div v-if="!data.available_lots.length" class="empty-state glass-card-flat">
+            <div class="empty-icon">🅿️</div><h3>No lots available right now</h3>
+          </div>
+          <div class="grid-lots" v-else>
+            <div v-for="lot in data.available_lots.slice(0,6)" :key="lot.id" class="lot-card">
+              <div class="lot-card-header">
+                <div class="flex-between">
+                  <div>
+                    <div class="lot-name">{{ lot.prime_location_name }}</div>
+                    <div class="lot-address"><i class="bi bi-geo-alt"></i> {{ lot.pin_code }}</div>
+                  </div>
+                  <span class="price-tag">₹{{ lot.price_per_hour }}/hr</span>
+                </div>
+              </div>
+              <div class="lot-card-body">
+                <div class="flex-between mb-2">
+                  <span class="badge-vpa badge-available"><i class="bi bi-check-circle"></i> {{ lot.available_spots }} free</span>
+                  <span class="badge-vpa badge-occupied">{{ lot.occupied_spots }} taken</span>
+                </div>
+                <button class="btn-vpa btn-sm-vpa w-100" style="justify-content:center" @click="navigate('user-reserve', {lot_id: lot.id})">
+                  <i class="bi bi-bookmark-plus"></i> Book Spot
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  `,
+  methods: {
+    calcDuration(start, end) {
+      if (!start || !end) return '—';
+      const hrs = (new Date(end) - new Date(start)) / 3600000;
