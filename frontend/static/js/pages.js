@@ -1146,3 +1146,116 @@ const UserReserve = {
         </div>
       </template>
     </div>
+  `
+};
+
+// ── User — Release Spot Confirmation ──────────────────────
+const UserRelease = {
+  props: ['navData'],
+  setup(props) {
+    const { ref, onMounted, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const res       = ref(null);
+    const loading   = ref(true);
+    const releasing = ref(false);
+    const resId     = props.navData?.reservation_id;
+
+    onMounted(async () => {
+      if (!resId) { navigate('user-dashboard'); return; }
+      try {
+        const resp = await api.get(`/user/reservations/${resId}`);
+        res.value = resp.data;
+      } catch(e) {
+        showToast('Failed to load reservation', 'error');
+        navigate('user-dashboard');
+      } finally { loading.value = false; }
+    });
+
+    async function release() {
+      releasing.value = true;
+      try {
+        const resp = await api.put(`/user/reservations/${resId}/release`);
+        showToast(`Spot released! Final cost: ₹${resp.data.reservation.parking_cost.toFixed(2)} 🎉`, 'success');
+        navigate('user-dashboard');
+      } catch(e) {
+        showToast(e.response?.data?.error || 'Release failed', 'error');
+      } finally { releasing.value = false; }
+    }
+
+    function calcDuration(start) {
+      if (!start) return '—';
+      const hrs = (Date.now() - new Date(start)) / 3600000;
+      return hrs < 1 ? `${Math.round(hrs*60)} min` : `${hrs.toFixed(1)} hr`;
+    }
+
+    return { res, loading, releasing, navigate, release, calcDuration };
+  },
+  template: `
+    <div style="max-width:500px;margin:0 auto">
+      <div class="flex-gap mb-4">
+        <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('user-dashboard')"><i class="bi bi-arrow-left"></i> Back</button>
+        <h2>Release Parking Spot</h2>
+      </div>
+      <div v-if="loading" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
+      <template v-else-if="res">
+        <div class="glass-card-flat mb-3" style="background:rgba(233,69,96,0.07);border-color:rgba(233,69,96,0.2)">
+          <h3 class="mb-1" style="color:var(--highlight)">{{ res.lot_name }}</h3>
+          <p class="text-muted text-sm"><i class="bi bi-geo-alt"></i> {{ res.lot_address }}</p>
+        </div>
+        <div class="glass-card-flat mb-3">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div><p class="stat-label">Spot #</p><p class="fw-bold" style="font-size:1.3rem">{{ res.spot_number }}</p></div>
+            <div><p class="stat-label">Vehicle</p><p class="fw-bold">{{ res.vehicle_number || '—' }}</p></div>
+            <div><p class="stat-label">Parking Time</p><p class="fw-600">{{ new Date(res.parking_timestamp).toLocaleString('en-IN') }}</p></div>
+            <div><p class="stat-label">Duration So Far</p><p class="fw-600 text-warning">{{ calcDuration(res.parking_timestamp) }}</p></div>
+            <div><p class="stat-label">Rate</p><p class="fw-600">₹{{ res.price_per_hour }}/hr</p></div>
+            <div><p class="stat-label">Estimated Cost</p><p class="fw-bold text-warning" style="font-size:1.3rem">₹{{ res.current_cost.toFixed(2) }}</p></div>
+          </div>
+          <hr class="divider"/>
+          <p class="text-xs text-muted">Final cost calculated when spot is released</p>
+        </div>
+        <div class="flex-gap">
+          <button class="btn-vpa" @click="release" :disabled="releasing">
+            <span v-if="releasing" class="loader-ring" style="width:14px;height:14px;border-width:2px"></span>
+            <span v-else><i class="bi bi-sign-stop-fill"></i> Confirm Release</span>
+          </button>
+          <button class="btn-vpa-outline" @click="navigate('user-dashboard')">Cancel</button>
+        </div>
+      </template>
+    </div>
+  `
+};
+
+// ── User — History ─────────────────────────────────────────
+const UserHistory = {
+  setup() {
+    const { ref, onMounted, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const reservations = ref([]);
+    const filter    = ref('all');
+    const loading   = ref(true);
+    const exporting = ref(false);
+    const jobId     = ref(null);
+    const jobStatus = ref('');
+
+    async function load() {
+      try {
+        const res = await api.get('/user/reservations', { params: { status: filter.value } });
+        reservations.value = res.data;
+      } catch(e) {
+        showToast('Failed to load history', 'error');
+      } finally { loading.value = false; }
+    }
+
+    async function triggerExport() {
+      exporting.value = true; jobStatus.value = 'pending';
+      try {
+        const res = await api.post('/user/export-csv');
+        jobId.value = res.data.job_id;
+        showToast('Export started — you\'ll be notified when ready', 'info');
+        pollJob();
+      } catch(e) {
+        showToast('Export failed', 'error');
+        exporting.value = false;
