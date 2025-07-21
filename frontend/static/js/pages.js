@@ -1325,3 +1325,18 @@ const UserHistory = {
               <td class="text-muted">#{{ r.id }}</td>
               <td><strong>{{ r.lot_name }}</strong></td>
               <td>#{{ r.spot_number }}</td>
+              <td>{{ r.vehicle_number || '—' }}</td>
+              <td class="text-sm text-muted">{{ r.parking_timestamp ? new Date(r.parking_timestamp).toLocaleString('en-IN',{dateStyle:'short',timeStyle:'short'}) : '—' }}</td>
+              <td class="text-sm text-muted">{{ r.leaving_timestamp ? new Date(r.leaving_timestamp).toLocaleString('en-IN',{dateStyle:'short',timeStyle:'short'}) : 'Active' }}</td>
+              <td class="text-sm">{{ calcDuration(r.parking_timestamp, r.leaving_timestamp) }}</td>
+              <td class="fw-bold">
+                <span v-if="r.is_active" class="text-warning">₹{{ r.current_cost.toFixed(2) }} live</span>
+                <span v-else class="text-success">₹{{ r.parking_cost.toFixed(2) }}</span>
+              </td>
+              <td>
+                <span class="badge-vpa" :class="r.is_active ? 'badge-active' : 'badge-completed'">
+                  {{ r.is_active ? 'Active' : 'Done' }}
+                </span>
+              </td>
+              <td>
+                <button v-if="r.is_active" class="btn-vpa btn-sm-vpa" @click="navigate('user-release', {reservation_id: r.id})">
