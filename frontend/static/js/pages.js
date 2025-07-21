@@ -1259,3 +1259,20 @@ const UserHistory = {
       } catch(e) {
         showToast('Export failed', 'error');
         exporting.value = false;
+      }
+    }
+
+    async function pollJob() {
+      if (!jobId.value) return;
+      try {
+        const res = await api.get(`/jobs/${jobId.value}`);
+        jobStatus.value = res.data.status;
+        if (res.data.status === 'completed') {
+          showToast('CSV export ready! Click Download.', 'success');
+          exporting.value = false;
+        } else if (res.data.status === 'failed') {
+          showToast('Export failed', 'error'); exporting.value = false;
+        } else {
+          setTimeout(pollJob, 2000);
+        }
+      } catch(e) { exporting.value = false; }
