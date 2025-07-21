@@ -1296,3 +1296,20 @@ const UserHistory = {
         <div class="flex-gap">
           <button v-if="!jobId || jobStatus==='failed'" class="btn-vpa-outline btn-sm-vpa" @click="triggerExport" :disabled="exporting">
             <span v-if="exporting" class="loader-ring" style="width:12px;height:12px;border-width:2px"></span>
+            <span v-else><i class="bi bi-download"></i> Export CSV</span>
+          </button>
+          <button v-if="jobStatus==='completed'" class="btn-success btn-sm-vpa" @click="downloadCsv">
+            <i class="bi bi-file-earmark-spreadsheet"></i> Download CSV
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-gap mb-3">
+        <button class="btn-vpa-outline btn-sm-vpa" :class="{['btn-vpa']:filter==='all'}" @click="filter='all';load()">All</button>
+        <button class="btn-vpa-outline btn-sm-vpa" :class="{['btn-vpa']:filter==='active'}" @click="filter='active';load()">Active</button>
+        <button class="btn-vpa-outline btn-sm-vpa" :class="{['btn-vpa']:filter==='completed'}" @click="filter='completed';load()">Completed</button>
+      </div>
+
+      <div v-if="loading" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
+      <div v-else-if="!reservations.length" class="empty-state glass-card-flat">
+        <div class="empty-icon">📋</div><h3>No reservations found</h3>
