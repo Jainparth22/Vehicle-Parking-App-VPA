@@ -1340,3 +1340,19 @@ const UserHistory = {
               </td>
               <td>
                 <button v-if="r.is_active" class="btn-vpa btn-sm-vpa" @click="navigate('user-release', {reservation_id: r.id})">
+                  Release
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `,
+  methods: {
+    calcDuration(start, end) {
+      if (!start) return '—';
+      const to = end ? new Date(end) : new Date();
+      const hrs = (to - new Date(start)) / 3600000;
+      return hrs < 1 ? `${Math.round(hrs*60)} min` : `${hrs.toFixed(1)} hr`;
+    }
