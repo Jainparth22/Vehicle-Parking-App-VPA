@@ -1276,3 +1276,23 @@ const UserHistory = {
           setTimeout(pollJob, 2000);
         }
       } catch(e) { exporting.value = false; }
+    }
+
+    function downloadCsv() {
+      if (!jobId.value) return;
+      window.location.href = `/api/user/download-csv/${jobId.value}`;
+    }
+
+    onMounted(load);
+    return { reservations, filter, loading, exporting, jobId, jobStatus, navigate, load, triggerExport, downloadCsv };
+  },
+  template: `
+    <div>
+      <div class="flex-between mb-4">
+        <div class="flex-gap">
+          <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('user-dashboard')"><i class="bi bi-arrow-left"></i> Back</button>
+          <h2>My Parking History</h2>
+        </div>
+        <div class="flex-gap">
+          <button v-if="!jobId || jobStatus==='failed'" class="btn-vpa-outline btn-sm-vpa" @click="triggerExport" :disabled="exporting">
+            <span v-if="exporting" class="loader-ring" style="width:12px;height:12px;border-width:2px"></span>
