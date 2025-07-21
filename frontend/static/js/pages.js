@@ -1313,3 +1313,15 @@ const UserHistory = {
       <div v-if="loading" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
       <div v-else-if="!reservations.length" class="empty-state glass-card-flat">
         <div class="empty-icon">📋</div><h3>No reservations found</h3>
+        <button class="btn-vpa mt-2" @click="navigate('user-browse-lots')">Book Your First Spot</button>
+      </div>
+      <div v-else class="glass-card-flat scroll-x">
+        <table class="vpa-table">
+          <thead>
+            <tr><th>ID</th><th>Lot</th><th>Spot</th><th>Vehicle</th><th>Time In</th><th>Time Out</th><th>Duration</th><th>Cost</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr v-for="r in reservations" :key="r.id">
+              <td class="text-muted">#{{ r.id }}</td>
+              <td><strong>{{ r.lot_name }}</strong></td>
+              <td>#{{ r.spot_number }}</td>
