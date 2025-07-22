@@ -1393,3 +1393,12 @@ const UserAnalytics = {
       const d = this.data;
       const cOpts = {
         responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#eaeaea', font: { family:'Inter', size:11 } } } },
+        scales: { x: { ticks: { color:'#9a9ab0' }, grid: { color:'rgba(255,255,255,0.05)' } },
+                  y: { ticks: { color:'#9a9ab0' }, grid: { color:'rgba(255,255,255,0.05)' } } }
+      };
+      if (this.$refs.spendChart && d.monthly_spending.length) {
+        this._charts.push(new Chart(this.$refs.spendChart, {
+          type: 'bar', data: {
+            labels: d.monthly_spending.map(x => x.month),
+            datasets: [{ label: 'Monthly Spend (₹)', data: d.monthly_spending.map(x => x.amount),
