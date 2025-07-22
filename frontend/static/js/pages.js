@@ -1402,3 +1402,19 @@ const UserAnalytics = {
           type: 'bar', data: {
             labels: d.monthly_spending.map(x => x.month),
             datasets: [{ label: 'Monthly Spend (₹)', data: d.monthly_spending.map(x => x.amount),
+              backgroundColor: 'rgba(233,69,96,0.65)', borderColor: 'var(--highlight)', borderWidth: 1, borderRadius: 6 }]
+          }, options: cOpts
+        }));
+      }
+      if (this.$refs.lotChart && d.lot_breakdown.length) {
+        this._charts.push(new Chart(this.$refs.lotChart, {
+          type: 'doughnut', data: {
+            labels: d.lot_breakdown.map(x => x.lot),
+            datasets: [{ data: d.lot_breakdown.map(x => x.count),
+              backgroundColor: ['rgba(233,69,96,0.7)','rgba(6,214,160,0.7)','rgba(17,138,178,0.7)','rgba(255,209,102,0.7)','rgba(118,120,237,0.7)'],
+              borderWidth: 0 }]
+          }, options: { responsive:true, maintainAspectRatio:false,
+            plugins: { legend: { labels: { color:'#eaeaea', font:{ family:'Inter', size:11 } } } } }
+        }));
+      }
+    }
