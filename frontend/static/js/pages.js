@@ -1356,3 +1356,21 @@ const UserHistory = {
       const hrs = (to - new Date(start)) / 3600000;
       return hrs < 1 ? `${Math.round(hrs*60)} min` : `${hrs.toFixed(1)} hr`;
     }
+  }
+};
+
+// ── User — Analytics ───────────────────────────────────────
+const UserAnalytics = {
+  setup() {
+    const { ref, onMounted, inject } = Vue;
+    const navigate  = inject('navigate');
+    const showToast = inject('showToast');
+    const data      = ref(null);
+    const loading   = ref(true);
+
+    async function load() {
+      try {
+        const res = await api.get('/user/analytics');
+        data.value = res.data;
+      } catch(e) {
+        showToast('Failed to load analytics', 'error');
