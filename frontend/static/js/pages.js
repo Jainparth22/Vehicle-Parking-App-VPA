@@ -1374,3 +1374,22 @@ const UserAnalytics = {
         data.value = res.data;
       } catch(e) {
         showToast('Failed to load analytics', 'error');
+      } finally { loading.value = false; }
+    }
+
+    onMounted(load);
+    return { data, loading, navigate };
+  },
+  mounted() {
+    this.unwatchData = this.$watch('data', (val) => {
+      if (val) this.$nextTick(() => this.renderCharts());
+    });
+  },
+  beforeUnmount() { this._charts?.forEach(c => c.destroy()); },
+  methods: {
+    renderCharts() {
+      this._charts = this._charts || [];
+      this._charts.forEach(c => c.destroy()); this._charts = [];
+      const d = this.data;
+      const cOpts = {
+        responsive: true, maintainAspectRatio: false,
