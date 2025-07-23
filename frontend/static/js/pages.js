@@ -1418,3 +1418,19 @@ const UserAnalytics = {
         }));
       }
     }
+  },
+  template: `
+    <div>
+      <div class="flex-gap mb-4">
+        <button class="btn-vpa-outline btn-sm-vpa" @click="navigate('user-dashboard')"><i class="bi bi-arrow-left"></i> Back</button>
+        <h2>My Parking Summary</h2>
+      </div>
+      <div v-if="loading" class="page-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div></div>
+      <template v-else-if="data">
+        <div class="grid-4 mb-4">
+          <div class="stat-card accent-blue">
+            <p class="stat-label">Total Bookings</p>
+            <p class="stat-number">{{ data.total_reservations }}</p>
+            <i class="bi bi-calendar-check stat-icon"></i>
+          </div>
+          <div class="stat-card accent-red">
