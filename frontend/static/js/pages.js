@@ -1448,3 +1448,11 @@ const UserAnalytics = {
             <p style="font-size:0.9rem;font-weight:700;line-height:1.3;margin-top:0.25rem">{{ data.most_used_lot || 'N/A' }}</p>
           </div>
         </div>
+        <div class="grid-2">
+          <div class="glass-card-flat">
+            <h3 class="mb-3">Monthly Spending (₹)</h3>
+            <div class="chart-wrapper" v-if="data.monthly_spending.length"><canvas ref="spendChart"></canvas></div>
+            <div v-else class="empty-state" style="padding:1rem"><p class="text-muted">No spending data yet</p></div>
+          </div>
+          <div class="glass-card-flat">
+            <h3 class="mb-3">Parking Lots Used</h3>
