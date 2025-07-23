@@ -1434,3 +1434,17 @@ const UserAnalytics = {
             <i class="bi bi-calendar-check stat-icon"></i>
           </div>
           <div class="stat-card accent-red">
+            <p class="stat-label">Total Spent</p>
+            <p class="stat-number" style="color:var(--highlight)">₹{{ data.total_spent.toFixed(0) }}</p>
+            <i class="bi bi-currency-rupee stat-icon"></i>
+          </div>
+          <div class="stat-card accent-green">
+            <p class="stat-label">Hours Parked</p>
+            <p class="stat-number" style="color:var(--success)">{{ data.total_hours.toFixed(1) }}</p>
+            <i class="bi bi-clock stat-icon"></i>
+          </div>
+          <div class="stat-card accent-yellow">
+            <p class="stat-label">Favourite Lot</p>
+            <p style="font-size:0.9rem;font-weight:700;line-height:1.3;margin-top:0.25rem">{{ data.most_used_lot || 'N/A' }}</p>
+          </div>
+        </div>
