@@ -1456,3 +1456,11 @@ const UserAnalytics = {
           </div>
           <div class="glass-card-flat">
             <h3 class="mb-3">Parking Lots Used</h3>
+            <div class="chart-wrapper" v-if="data.lot_breakdown.length"><canvas ref="lotChart"></canvas></div>
+            <div v-else class="empty-state" style="padding:1rem"><p class="text-muted">No data yet</p></div>
+          </div>
+        </div>
+      </template>
+    </div>
+  `
+};
